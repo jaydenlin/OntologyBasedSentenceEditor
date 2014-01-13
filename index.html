@@ -55,7 +55,7 @@
     }
     
     .expression-list ul{
-        letter-spacing:-0.5em;
+        letter-spacing:-0.4em;
     }
     
     
@@ -605,6 +605,7 @@
         //autocomplete thing
         var entityDefined = [],
             relationDefined = [],
+            allDefined = [],
             bindAutoComplete = function() {
 
                 Y.all('.entity').plug(Y.Plugin.AutoComplete, {
@@ -617,6 +618,13 @@
                     resultHighlighter: 'phraseMatch',
                     resultFilters: 'phraseMatch',
                     source: relationDefined
+                });
+                
+               
+                Y.all('.expression-text').plug(Y.Plugin.AutoComplete, {
+                    resultHighlighter: 'phraseMatch',
+                    resultFilters: 'phraseMatch',
+                    source: allDefined
                 });
             };
         bindAutoComplete();
@@ -633,6 +641,7 @@
                 index = entityDefined.indexOf(val);
             if (index === -1) {
                 entityDefined.push(val);
+                allDefined = entityDefined.concat(relationDefined);
             }
         }, '.entity');
 
@@ -650,6 +659,7 @@
                 index = relationDefined.indexOf(val);
             if (index === -1) {
                 relationDefined.push(val);
+                allDefined = entityDefined.concat(relationDefined);
             }
         }, '.relation');
 
@@ -926,28 +936,34 @@
             //ontology graph
             ontologyItems.each(function(v, k) {
                 var val = v.get('innerHTML');
-                //if (!isNan(val)) {
+                if (!isNan(val)) {
                     ontologyList.push(val);
                     //console.log(v.get('innerHTML'));
-                //}
+                }else{
+                    ontologyList.push("");
+                }
 
             });
             
             subontologyItems.each(function(v, k) {
                 var val = v.get('value');
-                //if (!isNan(val)) {
+                if (!isNan(val)) {
                     subontologyList.push(val);
                     //console.log(v.get('innerHTML'));
-                //}
+                }else{
+                    subontologyList.push("");
+                }
 
             });
             
             subsubontologyItems.each(function(v, k) {
                 var val = v.get('value');
-                //if (!isNan(val)) {
+                if (!isNan(val)) {
                     subsubontologyList.push(val);
                     //console.log(v.get('innerHTML'));
-                //}
+                }else{
+                    subsubontologyList.push("");
+                }
 
             });
             
