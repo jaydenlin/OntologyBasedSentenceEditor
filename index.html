@@ -122,16 +122,64 @@
                                 <a href="#">IsA</a>
                             </li>
                             <li>
+                                <a href="#">LocatedNear</a>
+                            </li>
+                            <li>
+                                <a href="#">UsedFor</a>
+                            </li>
+                            <li>
+                                <a href="#">DeﬁnedAs</a>
+                            </li>
+                            <li>
                                 <a href="#">HasA</a>
                             </li>
                             <li>
-                                <a href="#">LocatedAt</a>
+                                <a href="#">SymbolOf</a>
+                            </li>
+                            <li>
+                                <a href="#">CapableOf</a>
+                            </li>
+                            <li>
+                                <a href="#">ReceivesAction</a>
+                            </li>
+                            <li>
+                                <a href="#">Desires</a>
+                            </li>
+                            <li>
+                                <a href="#">CreatedBy</a>
                             </li>
                             <li>
                                 <a href="#">PartOf</a>
                             </li>
                             <li>
-                                <a href="#">MotivatedBy</a>
+                                <a href="#">Causes</a>
+                            </li>
+                            <li>
+                                <a href="#">HasFirstSubevent</a>
+                            </li>
+                            <li>
+                                <a href="#">AtLocation</a>
+                            </li>
+                            <li>
+                                <a href="#">HasProperty</a>
+                            </li>
+                            <li>
+                                <a href="#">HasPrerequisite</a>
+                            </li>
+                            <li>
+                                <a href="#">MotivatedByGoal</a>
+                            </li>
+                            <li>
+                                <a href="#">CausesDesire</a>
+                            </li>
+                            <li>
+                                <a href="#">MadeOf</a>
+                            </li>
+                            <li>
+                                <a href="#">HasSubevent</a>
+                            </li>
+                            <li>
+                                <a href="#">HasLastSubevent</a>
                             </li>
                             <li>
                                 <a href="#">Action</a>
@@ -169,16 +217,64 @@
                                 <a href="#">IsA</a>
                             </li>
                             <li>
+                                <a href="#">LocatedNear</a>
+                            </li>
+                            <li>
+                                <a href="#">UsedFor</a>
+                            </li>
+                            <li>
+                                <a href="#">DeﬁnedAs</a>
+                            </li>
+                            <li>
                                 <a href="#">HasA</a>
                             </li>
                             <li>
-                                <a href="#">LocatedAt</a>
+                                <a href="#">SymbolOf</a>
+                            </li>
+                            <li>
+                                <a href="#">CapableOf</a>
+                            </li>
+                            <li>
+                                <a href="#">ReceivesAction</a>
+                            </li>
+                            <li>
+                                <a href="#">Desires</a>
+                            </li>
+                            <li>
+                                <a href="#">CreatedBy</a>
                             </li>
                             <li>
                                 <a href="#">PartOf</a>
                             </li>
                             <li>
-                                <a href="#">MotivatedBy</a>
+                                <a href="#">Causes</a>
+                            </li>
+                            <li>
+                                <a href="#">HasFirstSubevent</a>
+                            </li>
+                            <li>
+                                <a href="#">AtLocation</a>
+                            </li>
+                            <li>
+                                <a href="#">HasProperty</a>
+                            </li>
+                            <li>
+                                <a href="#">HasPrerequisite</a>
+                            </li>
+                            <li>
+                                <a href="#">MotivatedByGoal</a>
+                            </li>
+                            <li>
+                                <a href="#">CausesDesire</a>
+                            </li>
+                            <li>
+                                <a href="#">MadeOf</a>
+                            </li>
+                            <li>
+                                <a href="#">HasSubevent</a>
+                            </li>
+                            <li>
+                                <a href="#">HasLastSubevent</a>
                             </li>
                             <li>
                                 <a href="#">Action</a>
@@ -210,6 +306,54 @@
                                 <a href="#">None</a>
                             </li>
                         </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="sub-ontology-list pure-menu-horizontal">
+                <ul>
+                    <li>
+                        <input class="entity" type="text" placeholder="Sub Entity1（Optional）">
+                    </li>
+                    <li>
+
+                        <input class="relation" type="text" placeholder="Sub Relation（Optional）">
+                    </li>
+                    <li>
+
+                        <input class="entity" type="text" placeholder="Sub Entity2（Optional）">
+                    </li>
+                    <li>
+
+                        <input class="relation" type="text" placeholder="Sub Relation（Optional）">
+                    </li>
+
+                    <li>
+
+                        <input class="entity" type="text" placeholder="Sub Entity3（Optional）">
+                    </li>
+                </ul>
+            </div>
+            <div class="sub-sub-ontology-list pure-menu-horizontal">
+                <ul>
+                    <li>
+                        <input class="entity" type="text" placeholder="Sub sub Entity1（Optional）">
+                    </li>
+                    <li>
+
+                        <input class="relation" type="text" placeholder="Sub sub Relation（Optional）">
+                    </li>
+                    <li>
+
+                        <input class="entity" type="text" placeholder="Sub sub Entity2（Optional）">
+                    </li>
+                    <li>
+
+                        <input class="relation" type="text" placeholder="Sub sub Relation（Optional）">
+                    </li>
+
+                    <li>
+
+                        <input class="entity" type="text" placeholder="Sub sub Entity3（Optional）">
                     </li>
                 </ul>
             </div>
@@ -252,7 +396,7 @@
         <fieldset>
             <legend>Expression</legend>
             <div class="expression-list">
-                
+
                 <ul class="expresion-item">
                     <li class="icon-drag"></li>
                     <li class="dd-list">
@@ -346,7 +490,6 @@
         Y.one('body').addClass('yui3-skin-sam');
         //render menu
         var horizontalMenu = new Y.Menu({
-            container: '#demo-horizontal-menu',
             container: '#demo-horizontal-menu',
             sourceNode: '#std-menu-items',
             orientation: 'horizontal',
@@ -705,8 +848,13 @@
             //outputXML.getElementsByTagName('name')[0].textContent = "";
             //console.log('gen!' + outputXML.getElementsByTagName('name')[0].textContent);
 
-            var ontologyItems = Y.Node.all('.ontology-list >ul >li > a'),
+            var ontologyGraph = [],
+                ontologyItems = Y.Node.all('.ontology-list >ul >li > a'),
                 ontologyList = [],
+                subontologyItems = Y.Node.all('.sub-ontology-list >ul >li > input'),
+                subontologyList =[],
+                subsubontologyItems = Y.Node.all('.sub-sub-ontology-list >ul >li > input'),
+                subsubontologyList =[],
                 instanceItems = Y.Node.all('.instance-list >ul >li > input'),
                 instanceListForValueField = [],
                 instanceListForNameField = [],
@@ -723,6 +871,36 @@
                 }
 
             });
+            
+            subontologyItems.each(function(v, k) {
+                var val = v.get('value');
+                if (!isNan(val)) {
+                    subontologyList.push(val);
+                    //console.log(v.get('innerHTML'));
+                }
+
+            });
+            
+            subsubontologyItems.each(function(v, k) {
+                var val = v.get('value');
+                if (!isNan(val)) {
+                    subsubontologyList.push(val);
+                    //console.log(v.get('innerHTML'));
+                }
+
+            });
+            
+            for(var i=0;i<ontologyList.length;i++){
+                var tempOntologyList = typeof ontologyList[i]==='undefined'?"":ontologyList[i],
+                    tempSubontologyList = typeof subontologyList[i]==='undefined'?"":subontologyList[i],
+                    tempSubsubontologyList = typeof subsubontologyList[i]==='undefined'?"":subsubontologyList[i],
+                    temp=tempOntologyList+"_"+tempSubontologyList+"_"+tempSubsubontologyList;
+                
+                //var temp = ontologyList[i]+"_"+subontologyList[i]+"_"+subsubontologyList[i];
+                ontologyGraph.push(temp);
+                console.log(temp);
+            
+            }
 
             //instanceList
             instanceItems.each(function(v, k) {
@@ -821,16 +999,16 @@
             //////////////////
 
             ///set onto graph
-            var ontograph = "";
-            for (var s = 0; s < ontologyList.length; s++) {
-                ontograph = ontograph + ontologyList[s];
-                console.log(ontologyList);
+            var ontographOutput = "";
+            for (var s = 0; s < ontologyGraph.length; s++) {
+                ontographOutput = ontographOutput + ontologyGraph[s];
+                console.log(ontographOutput);
             }
 
             var XML = document.createElement("div");
             var Node = document.createElement("intent");
             var Value = document.createElement("value");
-            Value.innerHTML = ontograph;
+            Value.innerHTML = ontographOutput;
             Node.appendChild(Value);
             Node.appendChild(document.createElement("topic")); //to be set
             Node.appendChild(document.createElement("application")); //to be set
@@ -885,7 +1063,6 @@
             var myXMLDoc = Y.XML.parse(XML.innerHTML);
             Y.one("#output").set('innerHTML', Y.XML.format(myXMLDoc));
 
-
         });
 
 
@@ -900,3 +1077,4 @@
 </script>
 
 </html>
+
