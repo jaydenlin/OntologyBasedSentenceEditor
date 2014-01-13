@@ -87,6 +87,12 @@
     .hidden{    
         visibility:hidden;
     }
+    
+    .for-copy{
+        visibility:hidden;
+        height:0px;
+    }
+    
 </style>
 
 <body>
@@ -370,7 +376,33 @@
         <fieldset>
             <legend>Instance</legend>
             <div class="instance-list pure-menu-horizontal">
-                <ul>
+                
+                 <ul class="instance-item for-copy">
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="entity" type="text" placeholder="Entity1">
+                    </li>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="relation" type="text" placeholder="Relation">
+                    </li>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="entity" type="text" placeholder="Entity2">
+                    </li>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="relation" type="text" placeholder="Relation（Optional）">
+                    </li>
+
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="entity" type="text" placeholder="Entity3（Optional）">
+                    </li>
+                </ul>
+                
+                
+                <ul class="instance-item" >
                     <li>
                         <i class="icon-drag"></i>
                         <input class="entity" type="text" placeholder="Entity1">
@@ -403,7 +435,31 @@
         <fieldset>
             <legend>Expression</legend>
             <div class="expression-list">
+                
+                 <ul class="expresion-item for-copy">
+                    <li class="icon-drag"></li>
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
 
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+                    <li class="hidden">the-end</li>
+                </ul>
+                
                 <ul class="expresion-item">
                     <li class="icon-drag"></li>
                     <li class="dd-list">
@@ -603,12 +659,10 @@
             evt.preventDefault();
             evt.stopPropagation();
 
-
-            console.log(evt.keyCode);
-
             var instancelist = Y.one('.instance-list'),
-                instancelistChild = Y.one('.instance-list ul').cloneNode(true);
+                instancelistChild = Y.one('.instance-list ul').cloneNode(true).removeClass('for-copy');
             instancelist.appendChild(instancelistChild);
+            console.log(Y.all('.instance-list ul').item(0));
             bindAutoComplete();
         });
 
@@ -618,7 +672,7 @@
             evt.preventDefault();
             evt.stopPropagation();
             var expressionlist = Y.one('.expression-list'),
-                expressionlistChild = Y.one('.expression-list ul').cloneNode(true),
+                expressionlistChild = Y.one('.expression-list ul').cloneNode(true).removeClass('for-copy'),
                 lis,
                 uls;
             expressionlist.appendChild(expressionlistChild);
