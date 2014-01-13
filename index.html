@@ -91,6 +91,13 @@
 
 <body>
     <form class="pure-form">
+        
+        <fieldset>
+            <legend>Application Information</legend>
+            <input class="app-name" type="text" placeholder="Application Name">
+            <input class="app-topic" type="text" placeholder="Topic">
+        </fieldset>
+        
         <fieldset>
             <legend>Ontology Graph</legend>
             <div class="ontology-list" id="demo-horizontal-menu">
@@ -1010,8 +1017,12 @@
             var Value = document.createElement("value");
             Value.innerHTML = ontographOutput;
             Node.appendChild(Value);
-            Node.appendChild(document.createElement("topic")); //to be set
-            Node.appendChild(document.createElement("application")); //to be set
+            var Topic = document.createElement("topic");
+            Topic.innerHTML=Y.one('.app-topic').get('value');
+            var Application = document.createElement("application");
+            Application.innerHTML=Y.one('.app-name').get('value');
+            Node.appendChild(Topic); //to be set
+            Node.appendChild(Application); //to be set
             Node.appendChild(document.createElement("example")); //to be set
             var Variable = document.createElement("variables");
 
@@ -1036,7 +1047,7 @@
             }
 
             Node.appendChild(Variable);
-            Node.appendChild(document.createElement("example"));
+            
             var Regex = document.createElement("regex");
 
             for (var j = 0; j < expressionList.length; j++) {
