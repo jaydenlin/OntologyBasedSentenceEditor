@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+<title>Sentence Generator</title>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.14.1/build/cssreset/cssreset-min.css">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<script src="http://yui.yahooapis.com/3.14.1/build/yui/yui-min.js"></script>
+<style>
+    .icon-drag{
+        width:10px;
+        height:10px;
+        vertical-align:middle;
+        margin:0px 2px 0px; 2px;
+        display:inline-block;
+        border-radius:2px;
+        background-color:grey;
+    }
+    .insert-space{
+        width:3px;
+        height:3px;
+        display:inline-block;
+        vertical-align:middle;
+        
+    }
+    
+    .dd-list {      
+        display:inline-block;
+        background-color:
+        border: 1px solid black;
+        background-color: #8DD5E7;
+        padding:5px;
+        cursor: move;
+        border-radius:2px;
+        letter-spacing:normal;
+    }
+    
+    .dd-list.relation-tag{
+        background-color:rgb(28, 184, 65);
+        color: white;
+        border: solid white 2px;
+        border-radius: 4px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+    
+    .dd-list.entity-tag{
+        background-color:rgb(223, 117, 20); /* this is an orange */
+        color: white;
+        border: solid white 2px;
+        border-radius: 4px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        
+    
+    }
+    
+    .expression-list ul{
+        letter-spacing:-0.5em;
+    }
+    
+    
+     .pure-button-success,
+        .pure-button-error,
+        .pure-button-warning,
+        .pure-button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .pure-button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .pure-button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .pure-button-warning {
+            background: rgb(223, 117, 20); /* this is an orange */
+        }
+
+        .pure-button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
+        
+    .hidden{    
+        visibility:hidden;
+    }
+</style>
+
+<body>
+    <form class="pure-form">
+        <fieldset>
+            <legend>Ontology Graph</legend>
+            <div class="ontology-list" id="demo-horizontal-menu">
+                <ul id="std-menu-items">
+                    <li class="pure-menu-selected">
+                        <a href="#">Entity1</a>
+                        <ul>
+                            <li>
+                                <a href="#">People1</a>
+                            </li>
+                            <li>
+                                <a href="#">Event1</a>
+                            </li>
+                            <li>
+                                <a href="#">Time1</a>
+                            </li>
+                            <li>
+                                <a href="#">Place1</a>
+                            </li>
+                            <li>
+                                <a href="#">Object1</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Relation</a>
+                        <ul>
+                            <li>
+                                <a href="#">IsA</a>
+                            </li>
+                            <li>
+                                <a href="#">HasA</a>
+                            </li>
+                            <li>
+                                <a href="#">LocatedAt</a>
+                            </li>
+                            <li>
+                                <a href="#">PartOf</a>
+                            </li>
+                            <li>
+                                <a href="#">MotivatedBy</a>
+                            </li>
+                            <li>
+                                <a href="#">Action</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Entity2</a>
+                        <ul>
+                            <li>
+                                <a href="#">People2</a>
+                            </li>
+                            <li>
+                                <a href="#">Event2</a>
+                            </li>
+                            <li>
+                                <a href="#">Time2</a>
+                            </li>
+                            <li>
+                                <a href="#">Place2</a>
+                            </li>
+                            <li>
+                                <a href="#">Object2</a>
+                            </li>
+                            <li>
+                                <a href="#">None</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Relation（Optional）</a>
+                        <ul>
+                            <li>
+                                <a href="#">IsA</a>
+                            </li>
+                            <li>
+                                <a href="#">HasA</a>
+                            </li>
+                            <li>
+                                <a href="#">LocatedAt</a>
+                            </li>
+                            <li>
+                                <a href="#">PartOf</a>
+                            </li>
+                            <li>
+                                <a href="#">MotivatedBy</a>
+                            </li>
+                            <li>
+                                <a href="#">Action</a>
+                            </li>
+                            <li>
+                                <a href="#">None</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Entity3（Optional）</a>
+                        <ul>
+                            <li>
+                                <a href="#">People3</a>
+                            </li>
+                            <li>
+                                <a href="#">Event3</a>
+                            </li>
+                            <li>
+                                <a href="#">Time3</a>
+                            </li>
+                            <li>
+                                <a href="#">Place3</a>
+                            </li>
+                            <li>
+                                <a href="#">Object3</a>
+                            </li>
+                            <li>
+                                <a href="#">None</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </fieldset>
+    </form>
+    <form class="pure-form">
+        <fieldset>
+            <legend>Instance</legend>
+            <div class="instance-list pure-menu-horizontal">
+                <ul>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="entity" type="text" placeholder="Entity1">
+                    </li>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="relation" type="text" placeholder="Relation">
+                    </li>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="entity" type="text" placeholder="Entity2">
+                    </li>
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="relation" type="text" placeholder="Relation（Optional）">
+                    </li>
+
+                    <li>
+                        <i class="icon-drag"></i>
+                        <input class="entity" type="text" placeholder="Entity3（Optional）">
+                    </li>
+                </ul>
+            </div>
+
+        </fieldset>
+    </form>
+    <button class="addInstance pure-button pure-button-primary">Add more instances</button>
+
+    <form class="pure-form">
+        <fieldset>
+            <legend>Expression</legend>
+            <div class="expression-list">
+                
+                <ul class="expresion-item">
+                    <li class="icon-drag"></li>
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+
+                    <li class="dd-list">
+                        <input class="expression-text" type="text" placeholder="text（Optional）">
+                    </li>
+                    <li class="hidden">the-end</li>
+                </ul>
+                <ul class="defined-entities-list">
+
+                </ul>
+                <ul class="defined-relations-list">
+
+                </ul>
+            </div>
+
+
+        </fieldset>
+    </form>
+    <button class="getDefinedEntities pure-button pure-button-warning">Get Defined Entities</button>
+    <button class="getDefinedRelations pure-button pure-button-success">Get Defined Relations</button>
+
+    <button class="addExpression pure-button pure-button-primary">Add more expressions</button>
+    <br>
+    <br>
+    <br>
+
+    <form class="pure-form">
+        <fieldset>
+            <legend>Generate XML</legend>
+        </fieldset>
+    </form>
+    <button class="genXML pure-button pure-button-primary">GenXML</button>
+    <br>
+    <br>
+    <br>
+
+
+    <textarea id="output">
+        <intent>
+            <value>Question_People_LocationAt_Place</value>
+            <topic>Question_People_LocationAt_Place</topic>
+            <application>Jayden</application>
+            <example>*</example>
+            <variables>
+                <item>
+                    <name>People_index0</name>
+                    <source>text</source>
+                    <type>String</type>
+                    <value>蘋果|香蕉</value>
+                </item>
+                <item>
+                    <name>Place</name>
+                    <source>text</source>
+                    <type>String</type>
+                    <value>紅冬冬的</value>
+                </item>
+            </variables>
+
+            <regex>
+                <expression>($adj$)($noun$)</expression>
+                <expression>($adj$)($is$)($noun$)</expression>
+            </regex>
+        </intent>
+
+    </textarea>
+
+</body>
+<script>
+    YUI({
+        classNamePrefix: 'pure'
+    }).use('gallery-sm-menu', 'dd-delegate', 'dd-drop-plugin', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
+
+
+
+        Y.one('body').addClass('yui3-skin-sam');
+        //render menu
+        var horizontalMenu = new Y.Menu({
+            container: '#demo-horizontal-menu',
+            container: '#demo-horizontal-menu',
+            sourceNode: '#std-menu-items',
+            orientation: 'horizontal',
+            hideOnOutsideClick: false,
+            hideOnClick: false
+        });
+        horizontalMenu.render();
+        horizontalMenu.show();
+
+
+
+
+        //instance drag and drop
+        var instanceDelegate = new Y.DD.Delegate({
+            container: '.instance-list',
+            invalid: 'input',
+            nodes: 'li'
+        });
+
+        instanceDelegate.on('drag:end', function(e) {
+            instanceDelegate.get('currentNode').setStyles({
+                top: 0,
+                left: 0
+            });
+        });
+
+        var instanceDrop = new Y.DD.Delegate({
+            container: '.expression-list',
+            invalid: 'input',
+            nodes: '.insert-space'
+        });
+
+
+        //onselect ontology structure list
+        Y.all('.pure-menu-label').on('click', function(evt) {
+            console.log(evt.currentTarget.ancestor().ancestor().ancestor().previous());
+            evt.currentTarget.ancestor().ancestor().previous().set('text', evt.currentTarget.get('text'));
+
+        });
+
+
+
+
+
+    });
+
+
+    YUI().use('datatype-xml', 'node', 'node-event-delegate', 'autocomplete', 'autocomplete-filters', 'autocomplete-highlighters', 'dd-drop-plugin', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
+
+        //autocomplete thing
+        var entityDefined = [],
+            relationDefined = [],
+            bindAutoComplete = function() {
+
+                Y.all('.entity').plug(Y.Plugin.AutoComplete, {
+                    resultHighlighter: 'phraseMatch',
+                    resultFilters: 'phraseMatch',
+                    source: entityDefined
+                });
+
+                Y.all('.relation').plug(Y.Plugin.AutoComplete, {
+                    resultHighlighter: 'phraseMatch',
+                    resultFilters: 'phraseMatch',
+                    source: relationDefined
+                });
+            };
+        bindAutoComplete();
+        //save entity and relation to
+        Y.one('.instance-list').delegate('focus', function() {
+            var index = entityDefined.indexOf(this.get('value'));
+            if (index > -1) {
+                entityDefined.splice(index, 1);
+            }
+        }, '.entity');
+
+        Y.one('.instance-list').delegate('blur', function() {
+            var val = this.get('value'),
+                index = entityDefined.indexOf(val);
+            if (index === -1) {
+                entityDefined.push(val);
+            }
+        }, '.entity');
+
+
+        Y.one('.instance-list').delegate('focus', function() {
+            var index = relationDefined.indexOf(this.get('value'));
+            if (index > -1) {
+                relationDefined.splice(index, 1);
+            }
+        }, '.relation');
+
+
+        Y.one('.instance-list').delegate('blur', function() {
+            var val = this.get('value'),
+                index = relationDefined.indexOf(val);
+            if (index === -1) {
+                relationDefined.push(val);
+            }
+        }, '.relation');
+
+
+        //add instance
+        Y.one('.addInstance').on('click', function(evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+
+            console.log(evt.keyCode);
+
+            var instancelist = Y.one('.instance-list'),
+                instancelistChild = Y.one('.instance-list ul').cloneNode(true);
+            instancelist.appendChild(instancelistChild);
+            bindAutoComplete();
+        });
+
+
+        //add expression
+        Y.one('.addExpression').on('click', function(evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            var expressionlist = Y.one('.expression-list'),
+                expressionlistChild = Y.one('.expression-list ul').cloneNode(true),
+                lis,
+                uls;
+            expressionlist.appendChild(expressionlistChild);
+
+            lis = expressionlistChild.all('li')
+                .each(function(v, k) {
+                    var dd = new Y.DD.Drag({
+                        node: v,
+                        target: {
+                            padding: '0 0 0 20'
+                        }
+                    }).plug(Y.Plugin.DDProxy, {
+                        moveOnEnd: false,
+                        cloneNode: true
+                    }).plug(Y.Plugin.DDConstrained, {
+                        constrain2node: '.expression-list'
+                    });
+
+                });
+            var tar = new Y.DD.Drop({
+                node: expressionlistChild
+            });
+
+
+        });
+
+        //get tags
+
+        Y.one('.getDefinedEntities').on('click', function(evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            var expressionlist = Y.one('.expression-list'),
+                definedEntitiesNode = Y.one('.defined-entities-list'),
+                lis,
+                uls;
+            expressionlist.appendChild(definedEntitiesNode);
+            definedEntitiesNode.get('childNodes').remove();
+
+            for (var i = 0; i < entityDefined.length; i++) {
+                definedEntitiesNode.appendChild(Y.Node.create('<li class="dd-list entity-tag">' + entityDefined[i] + '</li>'));
+            }
+
+
+            lis = definedEntitiesNode.all('li').each(function(v, k) {
+                var dd = new Y.DD.Drag({
+                    node: v,
+                    target: {
+                        padding: '0 0 0 20'
+                    }
+                }).plug(Y.Plugin.DDProxy, {
+                    moveOnEnd: false,
+                    cloneNode: true
+                }).plug(Y.Plugin.DDConstrained, {
+                    constrain2node: '.expression-list'
+                });
+
+            });
+            var tar = new Y.DD.Drop({
+                node: definedEntitiesNode
+            });
+
+            console.log('getDefinedEntities');
+
+
+        });
+
+        Y.one('.getDefinedRelations').on('click', function(evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            var expressionlist = Y.one('.expression-list'),
+                definedRelationNode = Y.one('.defined-relations-list'),
+                lis,
+                uls;
+            expressionlist.appendChild(definedRelationNode);
+            definedRelationNode.get('childNodes').remove();
+
+            for (var i = 0; i < relationDefined.length; i++) {
+                definedRelationNode.appendChild(Y.Node.create('<li class="dd-list relation-tag">' + relationDefined[i] + '</li>'));
+            }
+
+
+            lis = definedRelationNode.all('li').each(function(v, k) {
+                var dd = new Y.DD.Drag({
+                    node: v,
+                    target: {
+                        padding: '0 0 0 20'
+                    }
+                }).plug(Y.Plugin.DDProxy, {
+                    moveOnEnd: false,
+                    cloneNode: true
+                }).plug(Y.Plugin.DDConstrained, {
+                    constrain2node: '.expression-list'
+                });
+
+            });
+            var tar = new Y.DD.Drop({
+                node: definedRelationNode
+            });
+
+
+            console.log('getDefinedRelations');
+
+
+
+        });
+
+
+        ///////////////////////////////
+        //expression drag and drop start
+        ///////////////////////////////
+
+        //Listen for expression-list drop:over events
+
+        Y.DD.DDM.on('drop:over', function(e) {
+            //Get a reference to our drag and drop nodes
+            var drag = e.drag.get('node'),
+                drop = e.drop.get('node'),
+                isDDList = drag.getAttribute('class').indexOf('dd-list'),
+                isInsertSpace = drop.getAttribute('class').indexOf('insert-space');
+
+            //Are we dropping on a li node?
+            if (drop.get('tagName').toLowerCase() === 'li') {
+                //Are we not going up?
+                if (!goingUp) {
+                    drop = drop.get('nextSibling');
+                }
+                //Add the node to this list
+                if (isDDList !== -1) {
+                    drop.get('parentNode').insertBefore(drag, drop);
+                }
+
+                e.drop.sizeShim();
+            }
+        });
+        //Listen for all drag:drag events
+        Y.DD.DDM.on('drag:drag', function(e) {
+            //Get the last y point
+            var x = e.target.lastXY[0];
+            //is it greater than the lastY var?
+            if (x < lastX) {
+                //We are going up
+                goingUp = true;
+            } else {
+                //We are going down.
+                goingUp = false;
+            }
+            //Cache for next check
+            lastX = x;
+        });
+        //Listen for all drag:start events
+        Y.DD.DDM.on('drag:start', function(e) {
+            //Get our drag object
+            var drag = e.target;
+            //Set some styles here
+            drag.get('node').setStyle('opacity', '.25');
+
+        });
+        //Listen for a drag:end events
+        Y.DD.DDM.on('drag:end', function(e) {
+            var drag = e.target;
+            //Put our styles back
+            drag.get('node').setStyles({
+                visibility: '',
+                opacity: '1'
+            });
+
+
+        });
+        //Listen for all drag:drophit events
+        Y.DD.DDM.on('drag:drophit', function(e) {
+            var drop = e.drop.get('node'),
+                drag = e.drag.get('node'),
+                isDDList = e.drag.get('node').getAttribute('class').indexOf('dd-list');
+
+            //if we are not on an li, we must have been dropped on a ul
+            if (drop.get('tagName').toLowerCase() !== 'li') {
+                if (drop.contains(drag) !== true && isDDList !== -1) {
+                    drop.appendChild(drag);
+                }
+            }
+        });
+
+        //Static Vars
+        var goingUp = false,
+            lastX = 0;
+
+        //Get the list of li's in the lists and make them draggable
+        var lis = Y.Node.all('.expression-list ul li');
+        lis.each(function(v, k) {
+            var dd = new Y.DD.Drag({
+                node: v,
+                target: {
+                    padding: '0 0 0 20'
+                }
+            }).plug(Y.Plugin.DDProxy, {
+                moveOnEnd: false,
+                cloneNode: true
+            }).plug(Y.Plugin.DDConstrained, {
+                constrain2node: '.expression-list'
+            });
+
+        });
+
+        //Create simple targets for the 2 lists.
+        var uls = Y.Node.all('.expression-list ul');
+        uls.each(function(v, k) {
+            var tar = new Y.DD.Drop({
+                node: v
+            });
+        });
+        ///////////////////////////////
+        //expression drag and drop end
+        ///////////////////////////////
+
+
+
+        /////////////////////
+        ////output xml file
+        /////////////////////
+        Y.one('.genXML').on('click', function() {
+            var inputXML = Y.one("#output").get("value"),
+                outputXML = Y.XML.parse(inputXML),
+                isNan = function(val) {
+                    if (val.indexOf('Optional') !== -1 || val.indexOf('None') !== -1 || val.indexOf('Relation') !== -1 || val.indexOf('Entity') !== -1 || val === "") {
+
+                        return true;
+                    } else {
+
+                        return false;
+                    }
+
+
+                };
+            //outputXML.getElementsByTagName('name')[0].textContent = "";
+            //console.log('gen!' + outputXML.getElementsByTagName('name')[0].textContent);
+
+            var ontologyItems = Y.Node.all('.ontology-list >ul >li > a'),
+                ontologyList = [],
+                instanceItems = Y.Node.all('.instance-list >ul >li > input'),
+                instanceListForValueField = [],
+                instanceListForNameField = [],
+                expressionItems = Y.Node.all('.expresion-item >li'),
+                expressionList = [];
+            // console.log(ontologyItems[0]);
+
+            //ontology graph
+            ontologyItems.each(function(v, k) {
+                var val = v.get('innerHTML');
+                if (!isNan(val)) {
+                    ontologyList.push(val);
+                    //console.log(v.get('innerHTML'));
+                }
+
+            });
+
+            //instanceList
+            instanceItems.each(function(v, k) {
+                var val = v.get('value'),
+                    currentIndex, //sentenceIndex
+                    indexFromDefined,
+                    sycIndex; //the index sync with ontologyList
+
+                if (entityDefined.indexOf(val) === -1) {
+                    indexFromDefined = "Relation_" + relationDefined.indexOf(val);
+                } else {
+                    indexFromDefined = "Entity_" + entityDefined.indexOf(val);
+                }
+
+                if (!isNan(val)) {
+                    instanceListForValueField.push(val);
+                    currentIndex = instanceListForValueField.length - 1;
+                    sycIndex = (instanceListForValueField.length - 1) % (ontologyList.length - 1);
+
+                    instanceListForNameField.push('Onto' + currentIndex + '_' + ontologyList[sycIndex] + '_' + indexFromDefined);
+                    console.log('Onto' + currentIndex + '_' + ontologyList[sycIndex] + '_' + indexFromDefined);
+                }
+
+            });
+
+
+            //expressionList
+            var expresstionTemp = "";
+            expressionItems.each(function(v, k) {
+                var isEmpty = function(val) {
+                    if (val === "") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                },
+                    isEndExpression = function(val) {
+                        if (val === "the-end") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    sycIndex = instanceListForValueField.indexOf(v.get('text')); //syc nameFiled and valueField
+
+
+                //input or tag
+                if (v.one('input') === null) {
+                    //tag
+                    var val = v.get('text');
+                    if (!isEmpty(val)) {
+
+                        //add phase replace it with tag
+                        sycIndex = instanceListForValueField.indexOf(v.get('text'));
+                        if (sycIndex !== -1) {
+
+                            //console.log(v.get('text'));
+                            expresstionTemp = expresstionTemp + '($' + instanceListForNameField[sycIndex] + '$)';
+                            //console.log(expresstionTemp);
+                        }
+                        //is end then push
+                        if (isEndExpression(val)) {
+                            expressionList.push(expresstionTemp);
+                            console.log(expresstionTemp);
+                            expresstionTemp = "";
+                        }
+
+                    }
+
+
+
+                } else {
+                    //input
+                    var val = v.one('input').get('value');
+                    if (!isEmpty(val)) {
+                        //add phase
+                        expresstionTemp = expresstionTemp + v.one('input').get('value');
+                        //console.log(expresstionTemp);
+                        //is end then push
+                        if (isEndExpression(val)) {
+                            expressionList.push(expresstionTemp);
+                            console.log(expresstionTemp);
+                            expresstionTemp = "";
+                        }
+                    }
+                }
+
+
+
+
+
+            });
+
+            //////////////////
+            ///write xml file
+            //////////////////
+
+            ///set onto graph
+            var ontograph = "";
+            for (var s = 0; s < ontologyList.length; s++) {
+                ontograph = ontograph + ontologyList[s];
+                console.log(ontologyList);
+            }
+
+            var XML = document.createElement("div");
+            var Node = document.createElement("intent");
+            var Value = document.createElement("value");
+            Value.innerHTML = ontograph;
+            Node.appendChild(Value);
+            Node.appendChild(document.createElement("topic")); //to be set
+            Node.appendChild(document.createElement("application")); //to be set
+            Node.appendChild(document.createElement("example")); //to be set
+            var Variable = document.createElement("variables");
+
+            for (var i = 0; i < instanceListForNameField.length; i++) {
+                var item = document.createElement("item"),
+                    name = document.createElement("name"),
+                    source = document.createElement("source"),
+                    type = document.createElement("type"),
+                    value = document.createElement("value");
+
+                name.innerHTML = instanceListForNameField[i];
+                source.innerHTML = "text";
+                type.innerHTML = "String";
+                value.innerHTML = instanceListForValueField[i];
+
+                item.appendChild(name);
+                item.appendChild(source);
+                item.appendChild(type);
+                item.appendChild(value);
+                Variable.appendChild(item);
+
+            }
+
+            Node.appendChild(Variable);
+            Node.appendChild(document.createElement("example"));
+            var Regex = document.createElement("regex");
+
+            for (var j = 0; j < expressionList.length; j++) {
+                var expression = document.createElement("expression");
+                expression.innerHTML = expressionList[j];
+                Regex.appendChild(expression);
+
+            }
+            Node.appendChild(Regex);
+
+
+            //            Node.appendChild(document.createElement("variables"));
+            //            Node.appendChild(document.createElement("variables"));
+            //            Node.appendChild(document.createElement("variables"));
+            //            Node.appendChild(document.createElement("variables"));
+
+            XML.appendChild(Node);
+
+            //            var vv = outputXML.getElementsByTagName('variables');
+            //            var item = outputXML.createElement('item');
+            //            vv.appendChild(item);
+
+            console.log(XML);
+            var myXMLDoc = Y.XML.parse(XML.innerHTML);
+            Y.one("#output").set('innerHTML', Y.XML.format(myXMLDoc));
+
+
+        });
+
+
+
+
+
+
+
+
+
+    });
+</script>
+
+</html>
