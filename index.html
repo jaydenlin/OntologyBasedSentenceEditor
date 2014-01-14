@@ -669,7 +669,7 @@
                     source: allDefined
                 });
             },
-            bindDBLDelete = function(targetNode,currentTargetSelector){
+            bindDBLDelete = function(targetNode, currentTargetSelector) {
                 targetNode.delegate('dblclick', function(evt) {
                     evt.currentTarget.addClass('hidden');
                     evt.currentTarget.empty();
@@ -698,8 +698,8 @@
             };
 
         bindAutoComplete();
-        bindDBLDelete(Y.all('.expression-item').pop(),'.dd-list');
-        
+        bindDBLDelete(Y.all('.expression-item').pop(), '.dd-list');
+
 
         //duplicate
         Y.one('.expression-list').delegate('click', function(evt) {
@@ -708,7 +708,7 @@
                 lis;
             duplicateRow.insert(cloneRow, "after");
             //bind delete event
-            bindDBLDelete(cloneRow,'.dd-list');
+            bindDBLDelete(cloneRow, '.dd-list');
             //bind dd-list
             bindDDlist(cloneRow);
 
@@ -716,20 +716,36 @@
 
 
         //trash
-        Y.one('.expression-list').delegate('dblclick',function(evt){
-            
+        Y.one('.expression-list').delegate('dblclick', function(evt) {
+
             var deleteRow = evt.currentTarget.ancestor();
             deleteRow.addClass('hidden');
-            
-        },'.icon-delete');
-        
-         Y.one('.instance-list').delegate('dblclick',function(evt){
-            
+            deleteRow.empty();
+
+        }, '.icon-delete');
+
+        Y.one('.instance-list').delegate('dblclick', function(evt) {
+
             var deleteRow = evt.currentTarget.ancestor();
+            deleteRow.all('.entity').each(function(v, k) {
+                
+                var index = entityDefined.indexOf(v.get('value'));
+                if (index > -1) {
+                    entityDefined.splice(index, 1);
+                }
+            });
+            deleteRow.all('.relation').each(function(v, k) {
+                var index = relationDefined.indexOf(v.get('value'));
+                if (index > -1) {
+                    relationDefined.splice(index, 1);
+                }
+
+            });
+            deleteRow.empty();
             deleteRow.addClass('hidden');
-            
-        },'.icon-delete');
-        
+
+        }, '.icon-delete');
+
 
 
         //save entity and relation to defined
@@ -743,7 +759,7 @@
         Y.one('.instance-list').delegate('blur', function() {
             var val = this.get('value'),
                 index = entityDefined.indexOf(val);
-            if (index === -1) {
+            if (index === -1&&val!=="") {
                 entityDefined.push(val);
                 allDefined = entityDefined.concat(relationDefined);
             }
@@ -761,7 +777,7 @@
         Y.one('.instance-list').delegate('blur', function() {
             var val = this.get('value'),
                 index = relationDefined.indexOf(val);
-            if (index === -1) {
+            if (index === -1&&val!=="") {
                 relationDefined.push(val);
                 allDefined = entityDefined.concat(relationDefined);
             }
@@ -788,10 +804,10 @@
             evt.stopPropagation();
             var expressionlist = Y.one('.expression-list'),
                 expressionlistChild = Y.one('.expression-list ul').cloneNode(true).removeClass('for-copy');
-               
+
             expressionlist.appendChild(expressionlistChild);
             bindDDlist(expressionlistChild);
-            bindDBLDelete(Y.all('.expression-item').pop(),'.dd-list');
+            bindDBLDelete(Y.all('.expression-item').pop(), '.dd-list');
 
         });
 
@@ -801,7 +817,7 @@
             evt.stopPropagation();
             var expressionlist = Y.one('.expression-list'),
                 definedEntitiesNode = Y.one('.defined-entities-list');
-            
+
             expressionlist.appendChild(definedEntitiesNode);
             definedEntitiesNode.get('childNodes').remove();
 
