@@ -436,6 +436,7 @@
                         <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity3（Optional）">
                     </li>
+                    <li class="icon-delete"></li>
                 </ul>
 
 
@@ -462,6 +463,7 @@
                         <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity3（Optional）">
                     </li>
+                    <li class="icon-delete"></li>
                 </ul>
             </div>
 
@@ -715,6 +717,13 @@
 
         //trash
         Y.one('.expression-list').delegate('dblclick',function(evt){
+            
+            var deleteRow = evt.currentTarget.ancestor();
+            deleteRow.empty();
+            
+        },'.icon-delete');
+        
+         Y.one('.instance-list').delegate('dblclick',function(evt){
             
             var deleteRow = evt.currentTarget.ancestor();
             deleteRow.empty();
