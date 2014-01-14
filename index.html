@@ -43,6 +43,16 @@
         background-image:url(images/icon_copy.png);
     }
     
+    .icon-delete{
+        width:24px;
+        height:24px;
+        margin-left:5px;
+        vertical-align:middle;
+        display:inline-block;
+        background-image:url(images/trash.png);
+    
+    }
+    
     .insert-space{
         width:3px;
         height:3px;
@@ -483,7 +493,7 @@
                         <input class="expression-text" type="text" placeholder="text（Optional）">
                     </li>
 
-
+                    <li class="icon-delete"></li>
                     <li class="hidden">the-end</li>
                 </ul>
 
@@ -505,7 +515,7 @@
                     <li class="dd-list">
                         <input class="expression-text" type="text" placeholder="text（Optional）">
                     </li>
-
+                    <li class="icon-delete"></li>
                     <li class="hidden">the-end</li>
 
                 </ul>
@@ -651,61 +661,69 @@
                     source: relationDefined
                 });
 
-
                 Y.all('.expression-text').plug(Y.Plugin.AutoComplete, {
                     resultHighlighter: 'phraseMatch',
                     resultFilters: 'phraseMatch',
                     source: allDefined
                 });
             },
-            bindLastExprssionDBLDelete = function() {
-                console.log(Y.all('.expression-item').pop());
-                Y.all('.expression-item').pop().delegate('dblclick', function(evt) {
+            bindDBLDelete = function(targetNode,currentTargetSelector){
+                targetNode.delegate('dblclick', function(evt) {
                     evt.currentTarget.addClass('hidden');
                     evt.currentTarget.empty();
                     console.log(evt.currentTarget);
-                }, '.dd-list');
+                }, currentTargetSelector);
+            },
+            bindDDlist = function(rowOfDDlist) {
+                var lis = rowOfDDlist.all('li').each(function(v, k) {
+                    var dd = new Y.DD.Drag({
+                        node: v,
+                        target: {
+                            padding: '0 0 0 20'
+                        }
+                    }).plug(Y.Plugin.DDProxy, {
+                        moveOnEnd: false,
+                        cloneNode: true
+                    }).plug(Y.Plugin.DDConstrained, {
+                        constrain2node: '.expression-list'
+                    });
+
+                }),
+                    tar = new Y.DD.Drop({
+                        node: rowOfDDlist
+                    });
+
             };
 
         bindAutoComplete();
-        bindLastExprssionDBLDelete();
+        bindDBLDelete(Y.all('.expression-item').pop(),'.dd-list');
         
+
         //duplicate
         Y.one('.expression-list').delegate('click', function(evt) {
-            var duplicateChild = evt.currentTarget.ancestor(),
-                cloneChild = duplicateChild.cloneNode(true),
+            var duplicateRow = evt.currentTarget.ancestor(),
+                cloneRow = duplicateRow.cloneNode(true),
                 lis;
-            duplicateChild.insert(cloneChild, "after");
+            duplicateRow.insert(cloneRow, "after");
             //bind delete event
-            cloneChild.delegate('dblclick', function(evt) {
-                evt.currentTarget.addClass('hidden');
-                evt.currentTarget.empty();
-                console.log(evt.currentTarget);
-            }, '.dd-list');
-            
+            bindDBLDelete(cloneRow,'.dd-list');
             //bind dd-list
-            lis = cloneChild.all('li').each(function(v, k) {
-                var dd = new Y.DD.Drag({
-                    node: v,
-                    target: {
-                        padding: '0 0 0 20'
-                    }
-                }).plug(Y.Plugin.DDProxy, {
-                    moveOnEnd: false,
-                    cloneNode: true
-                }).plug(Y.Plugin.DDConstrained, {
-                    constrain2node: '.expression-list'
-                });
-
-            });
-            var tar = new Y.DD.Drop({
-                node: cloneChild
-            });
+            bindDDlist(cloneRow);
 
         }, '.icon-duplicate');
 
 
-        //save entity and relation to
+        //trash
+        Y.one('.expression-list').delegate('dblclick',function(evt){
+            
+            var deleteRow = evt.currentTarget.ancestor();
+            deleteRow.empty();
+            
+        },'.icon-delete');
+        
+
+
+        //save entity and relation to defined
         Y.one('.instance-list').delegate('focus', function() {
             var index = entityDefined.indexOf(this.get('value'));
             if (index > -1) {
@@ -760,44 +778,21 @@
             evt.preventDefault();
             evt.stopPropagation();
             var expressionlist = Y.one('.expression-list'),
-                expressionlistChild = Y.one('.expression-list ul').cloneNode(true).removeClass('for-copy'),
-                lis,
-                uls;
+                expressionlistChild = Y.one('.expression-list ul').cloneNode(true).removeClass('for-copy');
+               
             expressionlist.appendChild(expressionlistChild);
-
-            lis = expressionlistChild.all('li')
-                .each(function(v, k) {
-                    var dd = new Y.DD.Drag({
-                        node: v,
-                        target: {
-                            padding: '0 0 0 20'
-                        }
-                    }).plug(Y.Plugin.DDProxy, {
-                        moveOnEnd: false,
-                        cloneNode: true
-                    }).plug(Y.Plugin.DDConstrained, {
-                        constrain2node: '.expression-list'
-                    });
-
-                });
-            var tar = new Y.DD.Drop({
-                node: expressionlistChild
-            });
-
-            bindLastExprssionDBLDelete();
-
+            bindDDlist(expressionlistChild);
+            bindDBLDelete(Y.all('.expression-item').pop(),'.dd-list');
 
         });
 
         //get tags
-
         Y.one('.getDefinedEntities').on('click', function(evt) {
             evt.preventDefault();
             evt.stopPropagation();
             var expressionlist = Y.one('.expression-list'),
-                definedEntitiesNode = Y.one('.defined-entities-list'),
-                lis,
-                uls;
+                definedEntitiesNode = Y.one('.defined-entities-list');
+            
             expressionlist.appendChild(definedEntitiesNode);
             definedEntitiesNode.get('childNodes').remove();
 
@@ -805,26 +800,7 @@
                 definedEntitiesNode.appendChild(Y.Node.create('<li class="dd-list entity-tag">' + entityDefined[i] + '</li>'));
             }
 
-
-            lis = definedEntitiesNode.all('li').each(function(v, k) {
-                var dd = new Y.DD.Drag({
-                    node: v,
-                    target: {
-                        padding: '0 0 0 20'
-                    }
-                }).plug(Y.Plugin.DDProxy, {
-                    moveOnEnd: false,
-                    cloneNode: true
-                }).plug(Y.Plugin.DDConstrained, {
-                    constrain2node: '.expression-list'
-                });
-
-            });
-            var tar = new Y.DD.Drop({
-                node: definedEntitiesNode
-            });
-
-            //bindLastExprssionDBLDelete();
+            bindDDlist(definedEntitiesNode);
             console.log('getDefinedEntities');
 
 
@@ -844,26 +820,7 @@
                 definedRelationNode.appendChild(Y.Node.create('<li class="dd-list relation-tag">' + relationDefined[i] + '</li>'));
             }
 
-
-            lis = definedRelationNode.all('li').each(function(v, k) {
-                var dd = new Y.DD.Drag({
-                    node: v,
-                    target: {
-                        padding: '0 0 0 20'
-                    }
-                }).plug(Y.Plugin.DDProxy, {
-                    moveOnEnd: false,
-                    cloneNode: true
-                }).plug(Y.Plugin.DDConstrained, {
-                    constrain2node: '.expression-list'
-                });
-
-            });
-            var tar = new Y.DD.Drop({
-                node: definedRelationNode
-            });
-
-            //bindLastExprssionDBLDelete();
+            bindDDlist(definedRelationNode);
             console.log('getDefinedRelations');
 
 
