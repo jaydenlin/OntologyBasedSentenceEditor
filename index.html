@@ -14,9 +14,28 @@
         vertical-align:middle;
         margin:0px 2px 0px; 2px;
         display:inline-block;
-        border-radius:2px;
+        border-radius:2px;   
         background-color:grey;
     }
+    
+    .entity-color {
+        background-color:rgb(223, 117, 20);
+        color:white;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+    
+    .relation-color{
+        background-color:rgb(28, 184, 65);
+        color:white;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+    
+    .icon-duplicate{
+        width:0px;
+        height:0px;
+        background-image:url(http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Editing-Copy-icon.png);
+    }
+    
     .insert-space{
         width:3px;
         height:3px;
@@ -104,7 +123,7 @@
         </fieldset>
         
         <fieldset>
-            <legend>Ontology Graph</legend>
+            <legend>Ontology Graph with Interlingual Relation</legend>
             <div class="ontology-list" id="demo-horizontal-menu">
                 <ul id="std-menu-items">
                     <li class="pure-menu-selected">
@@ -377,50 +396,52 @@
             <div class="instance-list pure-menu-horizontal">
                 
                  <ul class="instance-item for-copy">
+                    <li class="icon-duplicate"></li> 
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity1">
                     </li>
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag relation-color"></i>
                         <input class="relation" type="text" placeholder="Relation">
                     </li>
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity2">
                     </li>
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag relation-color"></i>
                         <input class="relation" type="text" placeholder="Relation（Optional）">
                     </li>
 
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity3（Optional）">
                     </li>
                 </ul>
                 
                 
                 <ul class="instance-item" >
+                    <li class="icon-duplicate"></li> 
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity1">
                     </li>
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag relation-color"></i>
                         <input class="relation" type="text" placeholder="Relation">
                     </li>
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity2">
                     </li>
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag relation-color"></i>
                         <input class="relation" type="text" placeholder="Relation（Optional）">
                     </li>
 
                     <li>
-                        <i class="icon-drag"></i>
+                        <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity3（Optional）">
                     </li>
                 </ul>
@@ -436,6 +457,7 @@
             <div class="expression-list">
                 
                  <ul class="expresion-item for-copy">
+                    <li class="icon-duplicate"></li>
                     <li class="icon-drag"></li>
                     <li class="dd-list">
                         <input class="expression-text" type="text" placeholder="text（Optional）">
@@ -461,6 +483,7 @@
                 </ul>
                 
                 <ul class="expresion-item">
+                    <li class="icon-duplicate"></li>
                     <li class="icon-drag"></li>
                     <li class="dd-list">
                         <input class="expression-text" type="text" placeholder="text（Optional）">
@@ -482,6 +505,7 @@
                         <input class="expression-text" type="text" placeholder="text（Optional）">
                     </li>
                     <li class="hidden">the-end</li>
+                    
                 </ul>
                 <ul class="defined-entities-list">
 
@@ -1037,12 +1061,14 @@
                             //console.log(v.get('text'));
                             expresstionTemp = expresstionTemp + '($' + instanceListForNameField[sycIndex] + '$)';
                             //console.log(expresstionTemp);
-                        }
-                        //is end then push
-                        if (isEndExpression(val)) {
+                        }else if (isEndExpression(val)) {
+                            //is end then push
                             expressionList.push(expresstionTemp);
                             console.log(expresstionTemp);
                             expresstionTemp = "";
+                        }else{
+                            //not match anything, just put text in
+                            xpresstionTemp = expresstionTemp+val;
                         }
 
                     }
