@@ -18,6 +18,10 @@
         background-color:grey;
     }
     
+    .temp-area{
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+    
     .entity-color {
         background-color:rgb(223, 117, 20);
         color:white;
@@ -49,7 +53,7 @@
         background-color:
         border: 1px solid black;
         background-color: #8DD5E7;
-        padding:5px;
+        padding:15px;
         cursor: move;
         border-radius:2px;
         letter-spacing:normal;
@@ -104,7 +108,7 @@
         }
         
     .hidden{    
-        visibility:hidden;
+        display:none;
     }
     
     .for-copy{
@@ -456,7 +460,7 @@
             <legend>Expression</legend>
             <div class="expression-list">
                 
-                 <ul class="expresion-item for-copy">
+                 <ul class="expression-item for-copy">
                     <li class="icon-duplicate"></li>
                     <li class="icon-drag"></li>
                     <li class="dd-list">
@@ -482,7 +486,7 @@
                     <li class="hidden">the-end</li>
                 </ul>
                 
-                <ul class="expresion-item">
+                <ul class="expression-item">
                     <li class="icon-duplicate"></li>
                     <li class="icon-drag"></li>
                     <li class="dd-list">
@@ -507,10 +511,10 @@
                     <li class="hidden">the-end</li>
                     
                 </ul>
-                <ul class="defined-entities-list">
+                <ul class="defined-entities-list temp-area">
 
                 </ul>
-                <ul class="defined-relations-list">
+                <ul class="defined-relations-list temp-area">
 
                 </ul>
             </div>
@@ -586,7 +590,12 @@
         horizontalMenu.render();
         horizontalMenu.show();
 
-
+        
+//        Y.one('.expression-item').delegate('dblclick',function(evt){
+//        
+//            console.log('hi');
+//            
+//        },'.dd-list');
 
 
         //instance drag and drop
@@ -650,8 +659,20 @@
                     resultFilters: 'phraseMatch',
                     source: allDefined
                 });
+            },
+            bindLastExprssionDBLDelete =function(){
+                console.log(Y.all('.expression-item').pop());  
+                Y.all('.expression-item').pop().delegate('dblclick',function(evt){
+                    evt.currentTarget.addClass('hidden');
+                    evt.currentTarget.empty();
+                    console.log(evt.currentTarget);
+                },'.dd-list');
             };
+        
         bindAutoComplete();
+        bindLastExprssionDBLDelete();
+        
+        
         //save entity and relation to
         Y.one('.instance-list').delegate('focus', function() {
             var index = entityDefined.indexOf(this.get('value'));
@@ -698,6 +719,7 @@
             instancelist.appendChild(instancelistChild);
             console.log(Y.all('.instance-list ul').item(0));
             bindAutoComplete();
+            
         });
 
 
@@ -729,6 +751,8 @@
             var tar = new Y.DD.Drop({
                 node: expressionlistChild
             });
+            
+            bindLastExprssionDBLDelete();
 
 
         });
@@ -767,7 +791,8 @@
             var tar = new Y.DD.Drop({
                 node: definedEntitiesNode
             });
-
+            
+            //bindLastExprssionDBLDelete();
             console.log('getDefinedEntities');
 
 
@@ -806,7 +831,7 @@
                 node: definedRelationNode
             });
 
-
+            //bindLastExprssionDBLDelete();
             console.log('getDefinedRelations');
 
 
@@ -953,7 +978,7 @@
                 instanceItems = Y.Node.all('.instance-list >ul >li > input'),
                 instanceListForValueField = [],
                 instanceListForNameField = [],
-                expressionItems = Y.Node.all('.expresion-item >li'),
+                expressionItems = Y.Node.all('.expression-item >li'),
                 expressionList = [];
             // console.log(ontologyItems[0]);
 
