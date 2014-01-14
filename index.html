@@ -9,8 +9,8 @@
 <script src="http://yui.yahooapis.com/3.14.1/build/yui/yui-min.js"></script>
 <style>
     .icon-drag{
-        width:10px;
-        height:10px;
+        width:15px;
+        height:15px;
         vertical-align:middle;
         margin:0px 2px 0px; 2px;
         display:inline-block;
@@ -35,9 +35,12 @@
     }
     
     .icon-duplicate{
-        width:0px;
-        height:0px;
-        background-image:url(http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/512/Editing-Copy-icon.png);
+        width:32px;
+        height:32px;
+        vertical-align:middle;
+        margin-right:10px;
+        display:inline-block;
+        background-image:url(images/icon_copy.png);
     }
     
     .insert-space{
@@ -58,6 +61,8 @@
         border-radius:2px;
         letter-spacing:normal;
     }
+    
+    
     
     .dd-list.relation-tag{
         background-color:rgb(28, 184, 65);
@@ -114,18 +119,17 @@
     .for-copy{
         display:none;
     }
-    
 </style>
 
 <body>
     <form class="pure-form">
-        
+
         <fieldset>
             <legend>Application Information</legend>
             <input class="app-name" type="text" placeholder="Application Name">
             <input class="app-topic" type="text" placeholder="Topic">
         </fieldset>
-        
+
         <fieldset>
             <legend>Ontology Graph with Interlingual Relation</legend>
             <div class="ontology-list" id="demo-horizontal-menu">
@@ -398,9 +402,9 @@
         <fieldset>
             <legend>Instance</legend>
             <div class="instance-list pure-menu-horizontal">
-                
-                 <ul class="instance-item for-copy">
-                    <li class="icon-duplicate"></li> 
+
+                <ul class="instance-item for-copy">
+
                     <li>
                         <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity1">
@@ -423,10 +427,10 @@
                         <input class="entity" type="text" placeholder="Entity3（Optional）">
                     </li>
                 </ul>
-                
-                
-                <ul class="instance-item" >
-                    <li class="icon-duplicate"></li> 
+
+
+                <ul class="instance-item">
+
                     <li>
                         <i class="icon-drag entity-color"></i>
                         <input class="entity" type="text" placeholder="Entity1">
@@ -459,8 +463,8 @@
         <fieldset>
             <legend>Expression</legend>
             <div class="expression-list">
-                
-                 <ul class="expression-item for-copy">
+
+                <ul class="expression-item for-copy">
                     <li class="icon-duplicate"></li>
                     <li class="icon-drag"></li>
                     <li class="dd-list">
@@ -479,13 +483,10 @@
                         <input class="expression-text" type="text" placeholder="text（Optional）">
                     </li>
 
-                    <li class="dd-list">
-                        <input class="expression-text" type="text" placeholder="text（Optional）">
-                    </li>
-                   
+
                     <li class="hidden">the-end</li>
                 </ul>
-                
+
                 <ul class="expression-item">
                     <li class="icon-duplicate"></li>
                     <li class="icon-drag"></li>
@@ -505,11 +506,8 @@
                         <input class="expression-text" type="text" placeholder="text（Optional）">
                     </li>
 
-                    <li class="dd-list">
-                        <input class="expression-text" type="text" placeholder="text（Optional）">
-                    </li>
                     <li class="hidden">the-end</li>
-                    
+
                 </ul>
                 <ul class="defined-entities-list temp-area">
 
@@ -590,12 +588,12 @@
         horizontalMenu.render();
         horizontalMenu.show();
 
-        
-//        Y.one('.expression-item').delegate('dblclick',function(evt){
-//        
-//            console.log('hi');
-//            
-//        },'.dd-list');
+
+        //        Y.one('.expression-item').delegate('dblclick',function(evt){
+        //        
+        //            console.log('hi');
+        //            
+        //        },'.dd-list');
 
 
         //instance drag and drop
@@ -652,27 +650,61 @@
                     resultFilters: 'phraseMatch',
                     source: relationDefined
                 });
-                
-               
+
+
                 Y.all('.expression-text').plug(Y.Plugin.AutoComplete, {
                     resultHighlighter: 'phraseMatch',
                     resultFilters: 'phraseMatch',
                     source: allDefined
                 });
             },
-            bindLastExprssionDBLDelete =function(){
-                console.log(Y.all('.expression-item').pop());  
-                Y.all('.expression-item').pop().delegate('dblclick',function(evt){
+            bindLastExprssionDBLDelete = function() {
+                console.log(Y.all('.expression-item').pop());
+                Y.all('.expression-item').pop().delegate('dblclick', function(evt) {
                     evt.currentTarget.addClass('hidden');
                     evt.currentTarget.empty();
                     console.log(evt.currentTarget);
-                },'.dd-list');
+                }, '.dd-list');
             };
-        
+
         bindAutoComplete();
         bindLastExprssionDBLDelete();
         
-        
+        //duplicate
+        Y.one('.expression-list').delegate('click', function(evt) {
+            var duplicateChild = evt.currentTarget.ancestor(),
+                cloneChild = duplicateChild.cloneNode(true),
+                lis;
+            duplicateChild.insert(cloneChild, "after");
+            //bind delete event
+            cloneChild.delegate('dblclick', function(evt) {
+                evt.currentTarget.addClass('hidden');
+                evt.currentTarget.empty();
+                console.log(evt.currentTarget);
+            }, '.dd-list');
+            
+            //bind dd-list
+            lis = cloneChild.all('li').each(function(v, k) {
+                var dd = new Y.DD.Drag({
+                    node: v,
+                    target: {
+                        padding: '0 0 0 20'
+                    }
+                }).plug(Y.Plugin.DDProxy, {
+                    moveOnEnd: false,
+                    cloneNode: true
+                }).plug(Y.Plugin.DDConstrained, {
+                    constrain2node: '.expression-list'
+                });
+
+            });
+            var tar = new Y.DD.Drop({
+                node: cloneChild
+            });
+
+        }, '.icon-duplicate');
+
+
         //save entity and relation to
         Y.one('.instance-list').delegate('focus', function() {
             var index = entityDefined.indexOf(this.get('value'));
@@ -719,7 +751,7 @@
             instancelist.appendChild(instancelistChild);
             console.log(Y.all('.instance-list ul').item(0));
             bindAutoComplete();
-            
+
         });
 
 
@@ -751,7 +783,7 @@
             var tar = new Y.DD.Drop({
                 node: expressionlistChild
             });
-            
+
             bindLastExprssionDBLDelete();
 
 
@@ -791,7 +823,7 @@
             var tar = new Y.DD.Drop({
                 node: definedEntitiesNode
             });
-            
+
             //bindLastExprssionDBLDelete();
             console.log('getDefinedEntities');
 
@@ -972,9 +1004,9 @@
                 ontologyItems = Y.Node.all('.ontology-list >ul >li > a'),
                 ontologyList = [],
                 subontologyItems = Y.Node.all('.sub-ontology-list >ul >li > input'),
-                subontologyList =[],
+                subontologyList = [],
                 subsubontologyItems = Y.Node.all('.sub-sub-ontology-list >ul >li > input'),
-                subsubontologyList =[],
+                subsubontologyList = [],
                 instanceItems = Y.Node.all('.instance-list >ul >li > input'),
                 instanceListForValueField = [],
                 instanceListForNameField = [],
@@ -988,44 +1020,44 @@
                 if (!isNan(val)) {
                     ontologyList.push(val);
                     //console.log(v.get('innerHTML'));
-                }else{
+                } else {
                     ontologyList.push("");
                 }
 
             });
-            
+
             subontologyItems.each(function(v, k) {
                 var val = v.get('value');
                 if (!isNan(val)) {
                     subontologyList.push(val);
                     //console.log(v.get('innerHTML'));
-                }else{
+                } else {
                     subontologyList.push("");
                 }
 
             });
-            
+
             subsubontologyItems.each(function(v, k) {
                 var val = v.get('value');
                 if (!isNan(val)) {
                     subsubontologyList.push(val);
                     //console.log(v.get('innerHTML'));
-                }else{
+                } else {
                     subsubontologyList.push("");
                 }
 
             });
-            
-            for(var i=0;i<ontologyList.length;i++){
-                var tempOntologyList = typeof ontologyList[i]==='undefined'?"":ontologyList[i],
-                    tempSubontologyList = typeof subontologyList[i]==='undefined'?"":subontologyList[i],
-                    tempSubsubontologyList = typeof subsubontologyList[i]==='undefined'?"":subsubontologyList[i],
-                    temp=tempOntologyList+"_"+tempSubontologyList+"_"+tempSubsubontologyList;
-                
+
+            for (var i = 0; i < ontologyList.length; i++) {
+                var tempOntologyList = typeof ontologyList[i] === 'undefined' ? "" : ontologyList[i],
+                    tempSubontologyList = typeof subontologyList[i] === 'undefined' ? "" : subontologyList[i],
+                    tempSubsubontologyList = typeof subsubontologyList[i] === 'undefined' ? "" : subsubontologyList[i],
+                    temp = tempOntologyList + "_" + tempSubontologyList + "_" + tempSubsubontologyList;
+
                 //var temp = ontologyList[i]+"_"+subontologyList[i]+"_"+subsubontologyList[i];
                 ontologyGraph.push(temp);
                 console.log(temp);
-            
+
             }
 
             //instanceList
@@ -1086,14 +1118,14 @@
                             //console.log(v.get('text'));
                             expresstionTemp = expresstionTemp + '($' + instanceListForNameField[sycIndex] + '$)';
                             //console.log(expresstionTemp);
-                        }else if (isEndExpression(val)) {
+                        } else if (isEndExpression(val)) {
                             //is end then push
                             expressionList.push(expresstionTemp);
                             console.log(expresstionTemp);
                             expresstionTemp = "";
-                        }else{
+                        } else {
                             //not match anything, just put text in
-                            xpresstionTemp = expresstionTemp+val;
+                            xpresstionTemp = expresstionTemp + val;
                         }
 
                     }
@@ -1139,9 +1171,9 @@
             Value.innerHTML = ontographOutput;
             Node.appendChild(Value);
             var Topic = document.createElement("topic");
-            Topic.innerHTML=Y.one('.app-topic').get('value');
+            Topic.innerHTML = Y.one('.app-topic').get('value');
             var Application = document.createElement("application");
-            Application.innerHTML=Y.one('.app-name').get('value');
+            Application.innerHTML = Y.one('.app-name').get('value');
             Node.appendChild(Topic); //to be set
             Node.appendChild(Application); //to be set
             Node.appendChild(document.createElement("example")); //to be set
@@ -1168,13 +1200,15 @@
             }
 
             Node.appendChild(Variable);
-            
+
             var Regex = document.createElement("regex");
 
             for (var j = 0; j < expressionList.length; j++) {
-                var expression = document.createElement("expression");
-                expression.innerHTML = expressionList[j];
-                Regex.appendChild(expression);
+                if (expressionList[j] !== "") {
+                    var expression = document.createElement("expression");
+                    expression.innerHTML = expressionList[j];
+                    Regex.appendChild(expression);
+                }
 
             }
             Node.appendChild(Regex);
