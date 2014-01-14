@@ -719,14 +719,14 @@
         Y.one('.expression-list').delegate('dblclick',function(evt){
             
             var deleteRow = evt.currentTarget.ancestor();
-            deleteRow.empty();
+            deleteRow.addClass('hidden');
             
         },'.icon-delete');
         
          Y.one('.instance-list').delegate('dblclick',function(evt){
             
             var deleteRow = evt.currentTarget.ancestor();
-            deleteRow.empty();
+            deleteRow.addClass('hidden');
             
         },'.icon-delete');
         
