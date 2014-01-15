@@ -1034,7 +1034,7 @@
                 var tempOntologyList = typeof ontologyList[i] === 'undefined' ? "" : ontologyList[i],
                     tempSubontologyList = typeof subontologyList[i] === 'undefined' ? "" : subontologyList[i],
                     tempSubsubontologyList = typeof subsubontologyList[i] === 'undefined' ? "" : subsubontologyList[i],
-                    temp = tempOntologyList + "_" + tempSubontologyList + "_" + tempSubsubontologyList;
+                    temp = tempOntologyList + "_" + tempSubontologyList + "_" + tempSubsubontologyList+"&";
 
                 //var temp = ontologyList[i]+"_"+subontologyList[i]+"_"+subsubontologyList[i];
                 ontologyGraph.push(temp);
@@ -1107,7 +1107,7 @@
                             expresstionTemp = "";
                         } else {
                             //not match anything, just put text in
-                            xpresstionTemp = expresstionTemp + val;
+                            expresstionTemp = expresstionTemp + val;
                         }
 
                     }
