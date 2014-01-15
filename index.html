@@ -551,6 +551,9 @@
     <br>
     <br>
 
+    <div class="storage-list">
+
+    </div>
 
     <textarea id="output">
         <intent>
@@ -602,11 +605,7 @@
         horizontalMenu.show();
 
 
-        //        Y.one('.expression-item').delegate('dblclick',function(evt){
-        //        
-        //            console.log('hi');
-        //            
-        //        },'.dd-list');
+
 
 
         //instance drag and drop
@@ -696,94 +695,107 @@
                         node: rowOfDDlist
                     });
 
+            },
+            bindDuplicateButtons = function() {
+                //duplicate
+                Y.one('.expression-list').delegate('click', function(evt) {
+                    var duplicateRow = evt.currentTarget.ancestor(),
+                        cloneRow = duplicateRow.cloneNode(true),
+                        lis;
+                    duplicateRow.insert(cloneRow, "after");
+                    //bind delete event
+                    bindDBLDelete(cloneRow, '.dd-list');
+                    //bind dd-list
+                    bindDDlist(cloneRow);
+
+                }, '.icon-duplicate');
+
+            },
+            bindTrashButtons = function() {
+                //trash
+                Y.one('.expression-list').delegate('dblclick', function(evt) {
+
+                    var deleteRow = evt.currentTarget.ancestor();
+                    deleteRow.addClass('hidden');
+
+
+                }, '.icon-delete');
+
+                Y.one('.instance-list').delegate('dblclick', function(evt) {
+
+                    var deleteRow = evt.currentTarget.ancestor();
+                    deleteRow.all('.entity').each(function(v, k) {
+
+                        var index = entityDefined.indexOf(v.get('value'));
+                        if (index > -1) {
+                            entityDefined.splice(index, 1);
+                        }
+                    });
+                    deleteRow.all('.relation').each(function(v, k) {
+                        var index = relationDefined.indexOf(v.get('value'));
+                        if (index > -1) {
+                            relationDefined.splice(index, 1);
+                        }
+
+                    });
+
+                    deleteRow.addClass('hidden');
+
+                }, '.icon-delete');
+
+            },
+            bindRealtimeSaveEntityAndRelation = function() {
+                //save entity and relation to defined
+                Y.one('.instance-list').delegate('focus', function() {
+                    var index = entityDefined.indexOf(this.get('value'));
+                    if (index > -1) {
+                        entityDefined.splice(index, 1);
+                    }
+                }, '.entity');
+
+                Y.one('.instance-list').delegate('blur', function() {
+                    var val = this.get('value'),
+                        index = entityDefined.indexOf(val);
+                    if (index === -1 && val !== "") {
+                        entityDefined.push(val);
+                        allDefined = entityDefined.concat(relationDefined);
+                    }
+                }, '.entity');
+
+
+                Y.one('.instance-list').delegate('focus', function() {
+                    var index = relationDefined.indexOf(this.get('value'));
+                    if (index > -1) {
+                        relationDefined.splice(index, 1);
+                    }
+                }, '.relation');
+
+
+                Y.one('.instance-list').delegate('blur', function() {
+                    var val = this.get('value'),
+                        index = relationDefined.indexOf(val);
+                    if (index === -1 && val !== "") {
+                        relationDefined.push(val);
+                        allDefined = entityDefined.concat(relationDefined);
+                    }
+                }, '.relation');
+
+
             };
 
         bindAutoComplete();
+
+        //dbl delete
         bindDBLDelete(Y.all('.expression-item').pop(), '.dd-list');
 
-
         //duplicate
-        Y.one('.expression-list').delegate('click', function(evt) {
-            var duplicateRow = evt.currentTarget.ancestor(),
-                cloneRow = duplicateRow.cloneNode(true),
-                lis;
-            duplicateRow.insert(cloneRow, "after");
-            //bind delete event
-            bindDBLDelete(cloneRow, '.dd-list');
-            //bind dd-list
-            bindDDlist(cloneRow);
-
-        }, '.icon-duplicate');
-
+        bindDuplicateButtons();
 
         //trash
-        Y.one('.expression-list').delegate('dblclick', function(evt) {
-
-            var deleteRow = evt.currentTarget.ancestor();
-            deleteRow.addClass('hidden');
-
-
-        }, '.icon-delete');
-
-        Y.one('.instance-list').delegate('dblclick', function(evt) {
-
-            var deleteRow = evt.currentTarget.ancestor();
-            deleteRow.all('.entity').each(function(v, k) {
-
-                var index = entityDefined.indexOf(v.get('value'));
-                if (index > -1) {
-                    entityDefined.splice(index, 1);
-                }
-            });
-            deleteRow.all('.relation').each(function(v, k) {
-                var index = relationDefined.indexOf(v.get('value'));
-                if (index > -1) {
-                    relationDefined.splice(index, 1);
-                }
-
-            });
-
-            deleteRow.addClass('hidden');
-
-        }, '.icon-delete');
-
-
+        bindTrashButtons();
 
         //save entity and relation to defined
-        Y.one('.instance-list').delegate('focus', function() {
-            var index = entityDefined.indexOf(this.get('value'));
-            if (index > -1) {
-                entityDefined.splice(index, 1);
-            }
-        }, '.entity');
-
-        Y.one('.instance-list').delegate('blur', function() {
-            var val = this.get('value'),
-                index = entityDefined.indexOf(val);
-            if (index === -1 && val !== "") {
-                entityDefined.push(val);
-                allDefined = entityDefined.concat(relationDefined);
-            }
-        }, '.entity');
-
-
-        Y.one('.instance-list').delegate('focus', function() {
-            var index = relationDefined.indexOf(this.get('value'));
-            if (index > -1) {
-                relationDefined.splice(index, 1);
-            }
-        }, '.relation');
-
-
-        Y.one('.instance-list').delegate('blur', function() {
-            var val = this.get('value'),
-                index = relationDefined.indexOf(val);
-            if (index === -1 && val !== "") {
-                relationDefined.push(val);
-                allDefined = entityDefined.concat(relationDefined);
-            }
-        }, '.relation');
-
+        bindRealtimeSaveEntityAndRelation();
 
         //add instance
         Y.one('.addInstance').on('click', function(evt) {
@@ -974,7 +986,6 @@
 
                         return true;
                     } else {
-
                         return false;
                     }
 
@@ -1247,27 +1258,38 @@
                 fs.root.getFile('intent.xml', {
                     create: true
                 }, function(fileEntry) {
+                    
                     fileEntry.createWriter(function(fileWriter) {
 
                         fileWriter.onwriteend = function(e) {
-                            console.log('Write completed.');
+
+                            if (fileWriter.length > 0) {
+                                console.log('Write completed.');
+                                Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
+                                    "<a target='_blank' href='filesystem:http://127.0.0.1:49303/persistent/intent.xml'>See Output Report</a></div>"));
+                            }
+
                         };
 
                         fileWriter.onerror = function(e) {
                             console.log('Write failed: ' + e.toString());
                         };
 
-                        // Create a new Blob and write it to log.txt.
-                        var blob = new Blob([Y.XML.format(myXMLDoc)], {
-                            type: 'text/plain'
-                        });
+                        fileWriter.truncate(0);
+                        window.setTimeout(function() {
+                            // Create a new Blob and write it to log.txt.
+                            var blob = new Blob([Y.XML.format(myXMLDoc)], {
+                                type: 'text/plain'
+                            });
 
-                        fileWriter.write(blob);
+                            fileWriter.write(blob);
+                        }.bind(this), 500)
 
                     }, errorHandler);
 
 
                 }, errorHandler);
+                   
             }
 
             navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(grantedBytes) {
