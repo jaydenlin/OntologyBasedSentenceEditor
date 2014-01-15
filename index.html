@@ -720,7 +720,7 @@
 
             var deleteRow = evt.currentTarget.ancestor();
             deleteRow.addClass('hidden');
-            
+
 
         }, '.icon-delete');
 
@@ -728,7 +728,7 @@
 
             var deleteRow = evt.currentTarget.ancestor();
             deleteRow.all('.entity').each(function(v, k) {
-                
+
                 var index = entityDefined.indexOf(v.get('value'));
                 if (index > -1) {
                     entityDefined.splice(index, 1);
@@ -741,7 +741,7 @@
                 }
 
             });
-           
+
             deleteRow.addClass('hidden');
 
         }, '.icon-delete');
@@ -759,7 +759,7 @@
         Y.one('.instance-list').delegate('blur', function() {
             var val = this.get('value'),
                 index = entityDefined.indexOf(val);
-            if (index === -1&&val!=="") {
+            if (index === -1 && val !== "") {
                 entityDefined.push(val);
                 allDefined = entityDefined.concat(relationDefined);
             }
@@ -777,7 +777,7 @@
         Y.one('.instance-list').delegate('blur', function() {
             var val = this.get('value'),
                 index = relationDefined.indexOf(val);
-            if (index === -1&&val!=="") {
+            if (index === -1 && val !== "") {
                 relationDefined.push(val);
                 allDefined = entityDefined.concat(relationDefined);
             }
@@ -1034,7 +1034,7 @@
                 var tempOntologyList = typeof ontologyList[i] === 'undefined' ? "" : ontologyList[i],
                     tempSubontologyList = typeof subontologyList[i] === 'undefined' ? "" : subontologyList[i],
                     tempSubsubontologyList = typeof subsubontologyList[i] === 'undefined' ? "" : subsubontologyList[i],
-                    temp = tempOntologyList + "_" + tempSubontologyList + "_" + tempSubsubontologyList+"&";
+                    temp = tempOntologyList + "_" + tempSubontologyList + "_" + tempSubsubontologyList + "&";
 
                 //var temp = ontologyList[i]+"_"+subontologyList[i]+"_"+subsubontologyList[i];
                 ontologyGraph.push(temp);
@@ -1210,6 +1210,72 @@
             console.log(XML);
             var myXMLDoc = Y.XML.parse(XML.innerHTML);
             Y.one("#output").set('innerHTML', Y.XML.format(myXMLDoc));
+
+            ////////////////
+            ///write files
+            ////////////////
+            function errorHandler(e) {
+                var msg = '';
+
+                switch (e.code) {
+                    case FileError.QUOTA_EXCEEDED_ERR:
+                        msg = 'QUOTA_EXCEEDED_ERR';
+                        break;
+                    case FileError.NOT_FOUND_ERR:
+                        msg = 'NOT_FOUND_ERR';
+                        break;
+                    case FileError.SECURITY_ERR:
+                        msg = 'SECURITY_ERR';
+                        break;
+                    case FileError.INVALID_MODIFICATION_ERR:
+                        msg = 'INVALID_MODIFICATION_ERR';
+                        break;
+                    case FileError.INVALID_STATE_ERR:
+                        msg = 'INVALID_STATE_ERR';
+                        break;
+                    default:
+                        msg = 'Unknown Error';
+                        break;
+                };
+
+                console.log('Error: ' + msg);
+            }
+
+            function onInitFs(fs) {
+
+                fs.root.getFile('intent.xml', {
+                    create: true
+                }, function(fileEntry) {
+                    fileEntry.createWriter(function(fileWriter) {
+
+                        fileWriter.onwriteend = function(e) {
+                            console.log('Write completed.');
+                        };
+
+                        fileWriter.onerror = function(e) {
+                            console.log('Write failed: ' + e.toString());
+                        };
+
+                        // Create a new Blob and write it to log.txt.
+                        var blob = new Blob([Y.XML.format(myXMLDoc)], {
+                            type: 'text/plain'
+                        });
+
+                        fileWriter.write(blob);
+
+                    }, errorHandler);
+
+
+                }, errorHandler);
+            }
+
+            navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(grantedBytes) {
+                window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+                window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
+            }, function(e) {
+                console.log('Error', e);
+            });
+
 
         });
 
