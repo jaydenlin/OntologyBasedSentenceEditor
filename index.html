@@ -546,7 +546,7 @@
         </fieldset>
     </form>
     <button class="genXML pure-button pure-button-primary">GenXML</button>
-    <a target="_blank" href="filesystem:http://127.0.0.1:49303/persistent/intent.xml">See Output Report</a>
+   
     <br>
     <br>
     <br>
@@ -614,7 +614,7 @@
             invalid: 'input',
             nodes: 'li'
         });
-
+        
         instanceDelegate.on('drag:end', function(e) {
             instanceDelegate.get('currentNode').setStyles({
                 top: 0,
@@ -694,6 +694,7 @@
                     tar = new Y.DD.Drop({
                         node: rowOfDDlist
                     });
+                
 
             },
             bindDuplicateButtons = function() {
@@ -1254,8 +1255,9 @@
             }
 
             function onInitFs(fs) {
-
-                fs.root.getFile('intent.xml', {
+                var filename = Y.one('.app-name').get('value')+"_"+Y.one('.app-topic').get('value')+ontographOutput;
+                
+                fs.root.getFile(''+filename+'.xml', {
                     create: true
                 }, function(fileEntry) {
                     
@@ -1265,8 +1267,12 @@
 
                             if (fileWriter.length > 0) {
                                 console.log('Write completed.');
+                                
                                 Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                    "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/intent.xml'>See Output Report</a></div>"));
+                                    "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/"+filename+".xml'>"+filename+" Save!</a></div>"));
+                                
+//                                  Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
+//                                    "Save!</div>"));
                             }
 
                         };
