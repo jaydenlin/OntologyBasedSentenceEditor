@@ -894,6 +894,32 @@
                 }, '.relation');
 
 
+            },
+            errorHandler = function(e) {
+                var msg = '';
+
+                switch (e.code) {
+                    case FileError.QUOTA_EXCEEDED_ERR:
+                        msg = 'QUOTA_EXCEEDED_ERR';
+                        break;
+                    case FileError.NOT_FOUND_ERR:
+                        msg = 'NOT_FOUND_ERR';
+                        break;
+                    case FileError.SECURITY_ERR:
+                        msg = 'SECURITY_ERR';
+                        break;
+                    case FileError.INVALID_MODIFICATION_ERR:
+                        msg = 'INVALID_MODIFICATION_ERR';
+                        break;
+                    case FileError.INVALID_STATE_ERR:
+                        msg = 'INVALID_STATE_ERR';
+                        break;
+                    default:
+                        msg = 'Unknown Error';
+                        break;
+                };
+
+                console.log('Error: ' + msg);
             };
 
         bindAutoComplete();
@@ -1245,34 +1271,8 @@
             ////////////////
             ///write files
             ////////////////
-            function errorHandler(e) {
-                var msg = '';
 
-                switch (e.code) {
-                    case FileError.QUOTA_EXCEEDED_ERR:
-                        msg = 'QUOTA_EXCEEDED_ERR';
-                        break;
-                    case FileError.NOT_FOUND_ERR:
-                        msg = 'NOT_FOUND_ERR';
-                        break;
-                    case FileError.SECURITY_ERR:
-                        msg = 'SECURITY_ERR';
-                        break;
-                    case FileError.INVALID_MODIFICATION_ERR:
-                        msg = 'INVALID_MODIFICATION_ERR';
-                        break;
-                    case FileError.INVALID_STATE_ERR:
-                        msg = 'INVALID_STATE_ERR';
-                        break;
-                    default:
-                        msg = 'Unknown Error';
-                        break;
-                };
-
-                console.log('Error: ' + msg);
-            }
-
-            function onInitFs(fs) {
+            var onInitFs = function(fs) {
                 //                var filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') + ontographOutput;
                 var filename = 'test';
 
@@ -1334,10 +1334,8 @@
                                 console.log('Write completed.');
 
                                 Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                    "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + "html'>" + filename + " html Save!</a></div>"));
+                                    "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".html'>" + filename + " html Save!</a></div>"));
 
-                                //                                  Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                //                                    "Save!</div>"));
                             }
 
                         };
@@ -1382,34 +1380,7 @@
 
         Y.one('.importHTML').on('click', function(evt) {
 
-            function errorHandler(e) {
-                var msg = '';
-
-                switch (e.code) {
-                    case FileError.QUOTA_EXCEEDED_ERR:
-                        msg = 'QUOTA_EXCEEDED_ERR';
-                        break;
-                    case FileError.NOT_FOUND_ERR:
-                        msg = 'NOT_FOUND_ERR';
-                        break;
-                    case FileError.SECURITY_ERR:
-                        msg = 'SECURITY_ERR';
-                        break;
-                    case FileError.INVALID_MODIFICATION_ERR:
-                        msg = 'INVALID_MODIFICATION_ERR';
-                        break;
-                    case FileError.INVALID_STATE_ERR:
-                        msg = 'INVALID_STATE_ERR';
-                        break;
-                    default:
-                        msg = 'Unknown Error';
-                        break;
-                };
-
-                console.log('Error: ' + msg);
-            }
-
-            function onInitFs(fs) {
+            var onInitFs = function(fs) {
                 var filename = 'test';
                 fs.root.getFile('' + filename + '.html', {
                     create: true
@@ -1427,20 +1398,20 @@
                                 entityTexts,
                                 relationTexts,
                                 expressionTexts,
-                                instanceListAncestor= Y.one('.instance-list').ancestor(),
+                                instanceListAncestor = Y.one('.instance-list').ancestor(),
                                 expressionList = Y.one('.expression-list');
-                            
+
                             //bind DnD
                             node.all('.expression-list ul').each(function(v, k) {
-                                
+
                                 bindDDlist(v);
 
                             });
-                            
-                            //instanceListAncestor.empty();
+
+
                             instanceListAncestor.appendChild(node.one('.instance-list'));
                             expressionList.appendChild(node.all('.expression-list ul'));
-                            
+
                             entityTexts = Y.all('.entity');
                             relationTexts = Y.all('.relation');
                             expressionTexts = Y.all('.expression-text');
@@ -1465,7 +1436,7 @@
                             bindAutoComplete();
 
                             //dbl delete
-                            bindDBLDelete(Y.all('.expression-item').pop(), '.dd-list');
+                            //bindDBLDelete(Y.all('.expression-item').pop(), '.dd-list');
 
                             //duplicate
                             bindDuplicateButtons();
@@ -1485,7 +1456,6 @@
                 }, errorHandler);
 
 
-
             }
 
             navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(grantedBytes) {
@@ -1496,12 +1466,6 @@
             });
 
         })
-
-
-
-
-
-
 
 
 
