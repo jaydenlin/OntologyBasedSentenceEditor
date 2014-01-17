@@ -926,6 +926,9 @@
 
         //save entity and relation to defined
         bindRealtimeSaveEntityAndRelation();
+        
+        //bind DnD
+        bindDnD();
 
         //add instance
         Y.one('.addInstance').on('click', function(evt) {
@@ -996,19 +999,6 @@
         });
 
 
-        ///////////////////////////////
-        //expression drag and drop start
-        ///////////////////////////////
-
-        //Listen for expression-list drop:over events
-
-
-
-        bindDnD();
-        ///////////////////////////////
-        //expression drag and drop end
-        ///////////////////////////////
-
 
 
         /////////////////////
@@ -1016,17 +1006,7 @@
         /////////////////////
         Y.one('.genXML').on('click', function() {
             var inputXML = Y.one("#output").get("value"),
-                outputXML = Y.XML.parse(inputXML),
-                isNan = function(val) {
-                    if (val.indexOf('Optional') !== -1 || val.indexOf('None') !== -1 || val.indexOf('Relation') !== -1 || val.indexOf('Entity') !== -1 || val === "") {
-
-                        return true;
-                    } else {
-                        return false;
-                    }
-
-
-                };
+                outputXML = Y.XML.parse(inputXML);
             //outputXML.getElementsByTagName('name')[0].textContent = "";
             //console.log('gen!' + outputXML.getElementsByTagName('name')[0].textContent);
 
@@ -1041,7 +1021,17 @@
                 instanceListForValueField = [],
                 instanceListForNameField = [],
                 expressionItems = Y.Node.all('.expression-item >li'),
-                expressionList = [];
+                expressionList = [],
+                isNan = function(val) {
+                    if (val.indexOf('Optional') !== -1 || val.indexOf('None') !== -1 || val.indexOf('Relation') !== -1 || val.indexOf('Entity') !== -1 || val === "") {
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+
+                };
             // console.log(ontologyItems[0]);
 
             //ontology graph
@@ -1442,7 +1432,7 @@
                             bindAutoComplete();
 
                             //duplicate
-                            bindDuplicateButtons();
+                            //bindDuplicateButtons(); don't bind twice
 
                             //trash
                             bindTrashButtons();
