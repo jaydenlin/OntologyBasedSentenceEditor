@@ -163,7 +163,16 @@
         .pure-button-secondary {
             background: rgb(66, 184, 221); /* this is a light blue */
         }
-        
+    
+    .file-row{
+       vertical-align:middle;
+    
+    }
+    .import-file{
+        margin:10px;
+    
+    }
+    
     .hidden{    
         display:none;
     }
@@ -171,6 +180,8 @@
     .for-copy{
         display:none;
     }
+    
+    
 </style>
 
 <body>
@@ -595,14 +606,11 @@
 
     <form class="pure-form">
         <fieldset>
-            <legend>Import HTML</legend>
+            <legend>List all files</legend>
         </fieldset>
     </form>
-    <button class="importHTML pure-button pure-button-primary">Import HTML</button>
-
-    <div class="storage-list">
-
-    </div>
+    <button class="listFiles pure-button pure-button-primary">List all files</button>
+     <div class="storage-list"> </div>
 
     <textarea id="output">
         <intent>
@@ -883,6 +891,7 @@
 
 
             },
+            filesystem = null,
             errorHandler = function(e) {
                 var msg = '';
 
@@ -908,6 +917,19 @@
                 };
 
                 console.log('Error: ' + msg);
+            },
+            initFileSystem = function() {
+                navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(grantedBytes) {
+                    window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+                    window.requestFileSystem(PERSISTENT, grantedBytes, function(fs) {
+
+                        filesystem = fs;
+
+                    }, errorHandler);
+                }, function(e) {
+                    console.log('Error', e);
+                });
+
             };
         //bind ontology selection
         bindOntologySelection();
@@ -926,9 +948,12 @@
 
         //save entity and relation to defined
         bindRealtimeSaveEntityAndRelation();
-        
+
         //bind DnD
         bindDnD();
+
+        //initFileSystem
+        initFileSystem();
 
         //add instance
         Y.one('.addInstance').on('click', function(evt) {
@@ -1232,233 +1257,242 @@
 
             }
             Node.appendChild(Regex);
-
-
-            //            Node.appendChild(document.createElement("variables"));
-            //            Node.appendChild(document.createElement("variables"));
-            //            Node.appendChild(document.createElement("variables"));
-            //            Node.appendChild(document.createElement("variables"));
-
             XML.appendChild(Node);
-
-            //            var vv = outputXML.getElementsByTagName('variables');
-            //            var item = outputXML.createElement('item');
-            //            vv.appendChild(item);
 
             console.log(XML);
             var myXMLDoc = Y.XML.parse(XML.innerHTML);
             Y.one("#output").set('innerHTML', Y.XML.format(myXMLDoc));
 
             ////////////////
-            ///write files
+            ///write xml files
             ////////////////
 
-            var onInitFs = function(fs) {
-                //                var filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') + ontographOutput;
-                var filename = 'test';
+            var fs = filesystem,
+                filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') + ontographOutput;
+            //                var filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') + ontographOutput;
 
-                fs.root.getFile('' + filename + '.xml', {
-                    create: true
-                }, function(fileEntry) {
+            fs.root.getFile('' + filename + '.xml', {
+                create: true
+            }, function(fileEntry) {
 
-                    fileEntry.createWriter(function(fileWriter) {
+                fileEntry.createWriter(function(fileWriter) {
 
-                        fileWriter.onwriteend = function(e) {
+                    fileWriter.onwriteend = function(e) {
 
-                            if (fileWriter.length > 0) {
-                                console.log('Write completed.');
+                        if (fileWriter.length > 0) {
+                            console.log('Write completed.');
 
-                                Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                    "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml'>" + filename + " Save!</a></div>"));
+                            Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
+                                "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml'>" + filename + " Save!</a></div>"));
 
-                                //                                  Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                //                                    "Save!</div>"));
-                            }
+                        }
 
-                        };
+                    };
 
-                        fileWriter.onerror = function(e) {
-                            console.log('Write failed: ' + e.toString());
-                        };
+                    fileWriter.onerror = function(e) {
+                        console.log('Write failed: ' + e.toString());
+                    };
 
-                        fileWriter.truncate(0);
-                        window.setTimeout(function() {
-                            // Create a new Blob and write it to log.txt.
-                            var blob = new Blob([Y.XML.format(myXMLDoc)], {
-                                type: 'text/plain'
-                            });
+                    fileWriter.truncate(0);
+                    window.setTimeout(function() {
+                        // Create a new Blob and write it to log.txt.
+                        var blob = new Blob([Y.XML.format(myXMLDoc)], {
+                            type: 'text/plain'
+                        });
 
-                            fileWriter.write(blob);
-                        }.bind(this), 500)
-
-                    }, errorHandler);
-
+                        fileWriter.write(blob);
+                    }.bind(this), 500)
 
                 }, errorHandler);
 
 
+            }, errorHandler);
 
-                Y.all('input').each(function(v, k) {
-                    v.setAttribute('text', v.get('value'));
-                });
+            /////////
+            //save input value to text
+            /////////
+            
+            Y.all('input').each(function(v, k) {
+                v.setAttribute('text', v.get('value'));
+            });
+            
+            /////////
+            //write html file
+            /////////
+            
+            fs.root.getFile('' + filename + '.xml.html', {
+                create: true
+            }, function(fileEntry) {
 
+                fileEntry.createWriter(function(fileWriter) {
 
-                fs.root.getFile('' + filename + '.html', {
-                    create: true
-                }, function(fileEntry) {
+                    fileWriter.onwriteend = function(e) {
 
-                    fileEntry.createWriter(function(fileWriter) {
+                        if (fileWriter.length > 0) {
+                            console.log('Write completed.');
 
-                        fileWriter.onwriteend = function(e) {
+                            Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
+                                "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml.html'>" + filename + " html Save!</a></div>"));
 
-                            if (fileWriter.length > 0) {
-                                console.log('Write completed.');
+                        }
 
-                                Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                    "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".html'>" + filename + " html Save!</a></div>"));
+                    };
 
-                            }
+                    fileWriter.onerror = function(e) {
+                        console.log('Write failed: ' + e.toString());
+                    };
 
-                        };
+                    fileWriter.truncate(0);
+                    window.setTimeout(function() {
 
-                        fileWriter.onerror = function(e) {
-                            console.log('Write failed: ' + e.toString());
-                        };
+                        var dom = '<!DOCTYPE html><html><meta charset="UTF-8"/><body>' + Y.one('.ontology-graph')._node.outerHTML + Y.one('.instance-list')._node.outerHTML + Y.one('.expression-list')._node.outerHTML + '</body></html>';
 
-                        fileWriter.truncate(0);
-                        window.setTimeout(function() {
+                        // Create a new Blob and write it to log.txt.
+                        var blob = new Blob([dom], {
+                            type: 'text/plain'
+                        });
 
-                            var dom = '<!DOCTYPE html><html><meta charset="UTF-8"/><body>' + Y.one('.ontology-graph')._node.outerHTML + Y.one('.instance-list')._node.outerHTML + Y.one('.expression-list')._node.outerHTML + '</body></html>';
-
-                            // Create a new Blob and write it to log.txt.
-                            var blob = new Blob([dom], {
-                                type: 'text/plain'
-                            });
-
-                            fileWriter.write(blob);
-                        }.bind(this), 500)
-
-                    }, errorHandler);
-
+                        fileWriter.write(blob);
+                    }.bind(this), 500)
 
                 }, errorHandler);
 
 
+            }, errorHandler);
+
+        });
+
+        
+        //import file
+        
+        Y.one('.storage-list').delegate('click', function(evt) {
+
+            var fs = filesystem,
+                filename = evt.currentTarget.getAttribute('filename');
+            console.log(evt.currentTarget.getAttribute('filename'));
+
+            fs.root.getFile('' + filename + '.html', {
+                create: true
+            }, function(fileEntry) {
+
+                fileEntry.file(function(file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function(e) {
+                        var txtArea = document.createElement('textarea');
+                        txtArea.value = this.result;
+                        document.body.appendChild(txtArea);
+
+                        var node = Y.Node.create(this.result),
+                            entityTexts,
+                            relationTexts,
+                            expressionTexts,
+                            ontologyGraph = Y.one('.ontology-graph'),
+                            instanceList = Y.one('.instance-list'),
+                            expressionList = Y.one('.expression-list');
+
+                        //bind DnD
+                        node.all('.expression-list ul').each(function(v, k) {
+
+                            bindDDlist(v);
+
+                        });
+
+                        //dbl delete
+                        node.all('.expression-item').each(function(v, k) {
+
+                            bindDBLDelete(v, '.dd-list');
+
+                        });
+
+                        ontologyGraph.empty();
+                        ontologyGraph.appendChild(node.one('.ontology-graph > legend'));
+                        ontologyGraph.appendChild(node.all('.ontology-list'));
+                        ontologyGraph.appendChild(node.all('.sub-ontology-list'));
+                        ontologyGraph.appendChild(node.all('.sub-sub-ontology-list'));
+                        instanceList.appendChild(node.all('.instance-list ul'));
+                        expressionList.appendChild(node.all('.expression-list ul'));
+
+                        entityTexts = Y.all('.entity');
+                        relationTexts = Y.all('.relation');
+                        expressionTexts = Y.all('.expression-text');
+
+                        //set values
+                        entityTexts.each(function(v, k) {
+                            v.set('value', v.getAttribute('text'));
+                            console.log(v.getAttribute('text'));
+                        });
+
+                        relationTexts.each(function(v, k) {
+                            v.set('value', v.getAttribute('text'));
+                            console.log(v.getAttribute('text'));
+                        });
+
+                        expressionTexts.each(function(v, k) {
+                            v.set('value', v.getAttribute('text'));
+                            console.log(v.getAttribute('text'));
+                        });
+
+                        //bind ontology selection
+                        bindOntologySelection();
+
+                        //bind autocomplete
+                        bindAutoComplete();
+
+                        //duplicate
+                        //bindDuplicateButtons(); don't bind twice
+
+                        //trash
+                        bindTrashButtons();
+
+                        //save entity and relation to defined
+                        bindRealtimeSaveEntityAndRelation();
+
+                    };
+
+                    reader.readAsText(file);
+                }, errorHandler);
 
 
+            }, errorHandler);
+
+
+        },'.import-file');
+        
+        
+        //list file
+        Y.one('.listFiles').on('click', function(evt) {
+            var fs = filesystem,
+                filename = 'test',
+                dirReader;
+
+            if (!fs) {
+                return;
             }
 
-            navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(grantedBytes) {
-                window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-                window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
-            }, function(e) {
-                console.log('Error', e);
-            });
+            dirReader = fs.root.createReader();
+            dirReader.readEntries(function(entries) {
 
+                var fragment = document.createDocumentFragment();
+                for (var i = 0, entry; entry = entries[i]; ++i) {
+
+                    if (entry.name.indexOf('html') === -1) {//only list xml files
+                        var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
+                            '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
+                        var li = document.createElement('li');
+                        li.innerHTML = [img, '<span>', entry.name, '</span>', '<button class="import-file pure-button pure-button-secondary" filename="'+entry.name+'">Import this file</button>'].join('');
+                        li.className = 'file-row';
+                        fragment.appendChild(li);
+                    }
+                }
+                Y.one('.storage-list').empty();
+                Y.one('.storage-list').appendChild(fragment);
+            }, errorHandler);
+            console.log('list files');
 
         });
 
 
-        Y.one('.importHTML').on('click', function(evt) {
-
-            var onInitFs = function(fs) {
-                var filename = 'test';
-                fs.root.getFile('' + filename + '.html', {
-                    create: true
-                }, function(fileEntry) {
-
-                    fileEntry.file(function(file) {
-                        var reader = new FileReader();
-
-                        reader.onloadend = function(e) {
-                            var txtArea = document.createElement('textarea');
-                            txtArea.value = this.result;
-                            document.body.appendChild(txtArea);
-
-                            var node = Y.Node.create(this.result),
-                                entityTexts,
-                                relationTexts,
-                                expressionTexts,
-                                ontologyGraph = Y.one('.ontology-graph'),
-                                instanceList = Y.one('.instance-list'),
-                                expressionList = Y.one('.expression-list');
-
-                            //bind DnD
-                            node.all('.expression-list ul').each(function(v, k) {
-
-                                bindDDlist(v);
-
-                            });
-
-                            //dbl delete
-                            node.all('.expression-item').each(function(v, k) {
-
-                                bindDBLDelete(v, '.dd-list');
-
-                            });
-
-                            ontologyGraph.empty();
-                            ontologyGraph.appendChild(node.one('.ontology-graph > legend'));
-                            ontologyGraph.appendChild(node.all('.ontology-list'));
-                            ontologyGraph.appendChild(node.all('.sub-ontology-list'));
-                            ontologyGraph.appendChild(node.all('.sub-sub-ontology-list'));
-                            instanceList.appendChild(node.all('.instance-list ul'));
-                            expressionList.appendChild(node.all('.expression-list ul'));
-
-                            entityTexts = Y.all('.entity');
-                            relationTexts = Y.all('.relation');
-                            expressionTexts = Y.all('.expression-text');
-
-                            //set values
-                            entityTexts.each(function(v, k) {
-                                v.set('value', v.getAttribute('text'));
-                                console.log(v.getAttribute('text'));
-                            });
-
-                            relationTexts.each(function(v, k) {
-                                v.set('value', v.getAttribute('text'));
-                                console.log(v.getAttribute('text'));
-                            });
-
-                            expressionTexts.each(function(v, k) {
-                                v.set('value', v.getAttribute('text'));
-                                console.log(v.getAttribute('text'));
-                            });
-
-                            //bind ontology selection
-                            bindOntologySelection();
-
-                            //bind autocomplete
-                            bindAutoComplete();
-
-                            //duplicate
-                            //bindDuplicateButtons(); don't bind twice
-
-                            //trash
-                            bindTrashButtons();
-
-                            //save entity and relation to defined
-                            bindRealtimeSaveEntityAndRelation();
-
-                        };
-
-                        reader.readAsText(file);
-                    }, errorHandler);
-
-
-                }, errorHandler);
-
-
-            }
-
-            navigator.webkitPersistentStorage.requestQuota(1024 * 1024, function(grantedBytes) {
-                window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-                window.requestFileSystem(PERSISTENT, grantedBytes, onInitFs, errorHandler);
-            }, function(e) {
-                console.log('Error', e);
-            });
-
-        })
 
 
 
