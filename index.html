@@ -635,60 +635,6 @@
 
 </body>
 <script>
-    YUI().use('dd-delegate', 'dd-drop-plugin', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
-
-
-        //Y.one('body').addClass('yui3-skin-sam');
-        //render menu
-//        var horizontalMenu = new Y.Menu({
-//            container: '#demo-horizontal-menu',
-//            sourceNode: '#std-menu-items',
-//            orientation: 'horizontal',
-//            hideOnOutsideClick: false,
-//            hideOnClick: false
-//        });
-//        horizontalMenu.render();
-//        horizontalMenu.show();
-
-
-
-
-
-        //instance drag and drop
-        var instanceDelegate = new Y.DD.Delegate({
-            container: '.instance-list',
-            invalid: 'input',
-            nodes: 'li'
-        });
-
-        instanceDelegate.on('drag:end', function(e) {
-            instanceDelegate.get('currentNode').setStyles({
-                top: 0,
-                left: 0
-            });
-        });
-
-        var instanceDrop = new Y.DD.Delegate({
-            container: '.expression-list',
-            invalid: 'input',
-            nodes: '.insert-space'
-        });
-
-
-        //onselect ontology structure list
-        Y.all('.ontology-list-submenu a').on('click', function(evt) {
-            console.log(evt.currentTarget.ancestor().ancestor().ancestor().previous());
-            evt.currentTarget.ancestor().ancestor().previous().set('text', evt.currentTarget.get('text'));
-
-        });
-
-
-
-
-
-    });
-
-
     YUI().use('datatype-xml', 'node', 'node-event-delegate', 'autocomplete', 'autocomplete-filters', 'autocomplete-highlighters', 'dd-drop-plugin', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
 
         //autocomplete thing
@@ -697,6 +643,15 @@
             allDefined = [],
             goingUp = false,
             lastX = 0,
+            bindOntologySelection = function() {
+
+                Y.all('.ontology-list-submenu a').on('click', function(evt) {
+                    console.log(evt.currentTarget.ancestor().ancestor().ancestor().previous());
+                    evt.currentTarget.ancestor().ancestor().previous().set('text', evt.currentTarget.get('text'));
+
+                });
+
+            },
             bindAutoComplete = function() {
 
                 Y.all('.entity').plug(Y.Plugin.AutoComplete, {
@@ -954,7 +909,10 @@
 
                 console.log('Error: ' + msg);
             };
+        //bind ontology selection
+        bindOntologySelection();
 
+        //bind autocomplete
         bindAutoComplete();
 
         //dbl delete
@@ -1477,7 +1435,10 @@
                                 console.log(v.getAttribute('text'));
                             });
 
+                            //bind ontology selection
+                            bindOntologySelection();
 
+                            //bind autocomplete
                             bindAutoComplete();
 
                             //duplicate
