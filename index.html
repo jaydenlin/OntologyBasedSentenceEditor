@@ -1463,6 +1463,33 @@
 
         },'.import-file');
         
+        //remove file
+        Y.one('.storage-list').delegate('dblclick', function(evt) {
+            var fs = filesystem,
+                filename = evt.currentTarget.getAttribute('filename'),
+                fileRow = evt.currentTarget.ancestor();
+            
+            fileRow.empty();
+            //rm html
+            fs.root.getFile('' + filename + '.html', {
+                create: true
+            }, function(fileEntry) {
+            
+                fileEntry.remove(function() {}, errorHandler);
+                
+            }, errorHandler);
+            
+            //rm xml
+            fs.root.getFile('' + filename + '', {
+                create: true
+            }, function(fileEntry) {
+            
+                fileEntry.remove(function() {}, errorHandler);
+                
+            }, errorHandler);
+            
+            
+        },'.remove-file');
         
         //list file
         Y.one('.listFiles').on('click', function(evt) {
@@ -1484,7 +1511,7 @@
                         var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                             '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
                         var li = document.createElement('li');
-                        li.innerHTML = [img, '<span>', entry.name, '</span>', '<button class="import-file pure-button pure-button-secondary" filename="'+entry.name+'">Import this file</button>'].join('');
+                        li.innerHTML = [img, '<span>', entry.name, '</span>', '<button class="import-file pure-button pure-button-secondary" filename="'+entry.name+'">Import this file</button><button class="remove-file pure-button pure-button-error" filename="'+entry.name+'">Remove this file</button>'].join('');
                         li.className = 'file-row';
                         fragment.appendChild(li);
                     }
