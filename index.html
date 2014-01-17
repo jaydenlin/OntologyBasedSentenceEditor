@@ -173,6 +173,22 @@
     
     }
     
+    .list-files{
+        width:100%;
+       
+    }
+    
+    .genXML{
+    
+        width:100%;
+       
+    }
+    
+    .saved-hint{
+    
+    
+    }
+    
     .hidden{    
         display:none;
     }
@@ -181,11 +197,21 @@
         display:none;
     }
     
+    .form-section{
+    
+        border:1px solid grey;
+        border-radius:10px;
+        margin:5px;
+        padding:30px;
+    }
+    
     
 </style>
 
 <body>
-    <form class="pure-form">
+    
+    <div class="form-section">
+        <form class="pure-form">
 
         <fieldset>
             <legend>Application Information</legend>
@@ -461,7 +487,10 @@
             </div>
         </fieldset>
     </form>
-    <form class="pure-form">
+    </div>   
+    
+    <div class="form-section">
+        <form class="pure-form">
         <fieldset>
             <legend>Instance</legend>
             <div class="instance-list pure-menu-horizontal">
@@ -522,9 +551,11 @@
 
         </fieldset>
     </form>
-    <button class="addInstance pure-button pure-button-primary">Add more instances</button>
-
-    <form class="pure-form">
+        <button class="addInstance pure-button pure-button-primary">Add more instances</button>
+    </div>
+   
+    <div class="form-section">
+        <form class="pure-form">
         <fieldset>
             <legend>Expression</legend>
             <div class="expression-list">
@@ -585,34 +616,34 @@
 
         </fieldset>
     </form>
-    <button class="getDefinedEntities pure-button pure-button-warning">Get Defined Entities</button>
-    <button class="getDefinedRelations pure-button pure-button-success">Get Defined Relations</button>
-
-    <button class="addExpression pure-button pure-button-primary">Add more expressions</button>
+        <button class="getDefinedEntities pure-button pure-button-warning">Get Defined Entities</button>
+        <button class="getDefinedRelations pure-button pure-button-success">Get Defined Relations</button>
+        <button class="addExpression pure-button pure-button-primary">Add more expressions</button>
+    </div>
     <br>
     <br>
     <br>
-
-    <form class="pure-form">
+    <div class="form-section">
+        <form class="pure-form">
         <fieldset>
             <legend>Generate XML</legend>
         </fieldset>
     </form>
-    <button class="genXML pure-button pure-button-primary">Save File</button>
-    <div class="saved-hint"></div>
-
+        <button class="genXML pure-button pure-button-primary">Save File</button>
+        <div class="saved-hint"></div>
+    </div>
     <br>
     <br>
     <br>
-
-    <form class="pure-form">
+    <div class="form-section">
+        <form class="pure-form">
         <fieldset>
             <legend>File Explorer</legend>
         </fieldset>
     </form>
-    <button class="listFiles pure-button pure-button-primary">List all files</button>
-     <div class="storage-list"> </div>
-
+        <button class="list-files pure-button pure-button-primary">List all files</button>
+        <div class="storage-list"> </div>
+    </div>
     <textarea id="output">
         <intent>
             <value>Question_People_LocationAt_Place</value>
@@ -1492,7 +1523,7 @@
         },'.remove-file');
         
         //list file
-        Y.one('.listFiles').on('click', function(evt) {
+        Y.one('.list-files').on('click', function(evt) {
             var fs = filesystem,
                 filename = 'test',
                 dirReader;
