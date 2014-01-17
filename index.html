@@ -1453,15 +1453,21 @@
                         //set entity and relation value of instance
                         entityTexts.each(function(v, k) {
                             var val =v.getAttribute('text');
-                            v.set('value', val);
-                            entityDefined.push(val);
+                            
+                            if(val!==""){
+                                v.set('value', val);
+                                entityDefined.push(val);
+                            }
                             console.log(v.getAttribute('text'));
                         });
 
                         relationTexts.each(function(v, k) {
                             var val =v.getAttribute('text');
-                            v.set('value', val);
-                            relationDefined.push(val);
+                            
+                            if(val!==""){
+                                v.set('value', val);
+                                relationDefined.push(val);
+                            }
                             console.log(v.getAttribute('text'));
                         });
 
