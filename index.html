@@ -1554,7 +1554,7 @@
                         var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                             '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
                         var li = document.createElement('li');
-                        li.innerHTML = [img, '<span>', entry.name, '</span>', '<button class="import-file pure-button pure-button-secondary" filename="' + entry.name + '">Import this file</button><button class="remove-file pure-button pure-button-error" filename="' + entry.name + '">Remove this file</button>'].join('');
+                        li.innerHTML = [img, '<span>', '<a href="filesystem:http://jaydenlin.tw/persistent/+'+entry.name+'">'+entry.name+'</a>', '</span>', '<button class="import-file pure-button pure-button-secondary" filename="' + entry.name + '">Import this file</button><button class="remove-file pure-button pure-button-error" filename="' + entry.name + '">Remove this file</button>'].join('');
                         li.className = 'file-row';
                         fragment.appendChild(li);
                     }
