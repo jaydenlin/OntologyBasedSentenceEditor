@@ -598,7 +598,8 @@
             <legend>Generate XML</legend>
         </fieldset>
     </form>
-    <button class="genXML pure-button pure-button-primary">GenXML</button>
+    <button class="genXML pure-button pure-button-primary">Save File</button>
+    <div class="saved-hint"></div>
 
     <br>
     <br>
@@ -1268,7 +1269,7 @@
             ////////////////
 
             var fs = filesystem,
-                filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') + ontographOutput;
+                filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') +"_"+ ontographOutput;
             //                var filename = Y.one('.app-name').get('value') + "_" + Y.one('.app-topic').get('value') + ontographOutput;
 
             fs.root.getFile('' + filename + '.xml', {
@@ -1278,12 +1279,15 @@
                 fileEntry.createWriter(function(fileWriter) {
 
                     fileWriter.onwriteend = function(e) {
+                        
+                        var savehint = Y.one('.saved-hint'),
+                            timestamp = new Date();
 
                         if (fileWriter.length > 0) {
                             console.log('Write completed.');
-
-                            Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml'>" + filename + " Save!</a></div>"));
+                            savehint.empty();
+                            savehint.appendChild(Y.Node.create("<div>" +
+                                "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml'>" + filename + " Saved! timestamp:"+timestamp.getTime()+"</a></div>"));
 
                         }
 
@@ -1331,8 +1335,8 @@
                         if (fileWriter.length > 0) {
                             console.log('Write completed.');
 
-                            Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
-                                "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml.html'>" + filename + " html Save!</a></div>"));
+//                            Y.one('.storage-list').appendChild(Y.Node.create("<div>" +
+//                                "<a target='_blank' href='filesystem:http://jaydenlin.tw/persistent/" + filename + ".xml.html'>" + filename + " html Save!</a></div>"));
 
                         }
 
