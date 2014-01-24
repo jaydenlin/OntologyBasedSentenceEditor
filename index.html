@@ -62,7 +62,9 @@
         cursor: move;
         border-radius:2px;
         letter-spacing:normal;
+        
     }
+    
     
     
     
@@ -72,6 +74,9 @@
         border: solid white 2px;
         border-radius: 4px;
         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        width:50px;
+       
+        
     }
     
     .dd-list.entity-tag{
@@ -80,6 +85,9 @@
         border: solid white 2px;
         border-radius: 4px;
         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        width:50px;
+       
+        
         
     
     }
@@ -204,6 +212,13 @@
         margin:5px;
         padding:30px;
     }
+    
+    .ontology-list a{
+    
+        width:145px;
+    }
+    
+    
 </style>
 
 <body>
@@ -1452,9 +1467,9 @@
 
                         //set entity and relation value of instance
                         entityTexts.each(function(v, k) {
-                            var val =v.getAttribute('text');
-                            
-                            if(val!==""){
+                            var val = v.getAttribute('text');
+
+                            if (val !== "") {
                                 v.set('value', val);
                                 entityDefined.push(val);
                             }
@@ -1462,9 +1477,9 @@
                         });
 
                         relationTexts.each(function(v, k) {
-                            var val =v.getAttribute('text');
-                            
-                            if(val!==""){
+                            var val = v.getAttribute('text');
+
+                            if (val !== "") {
                                 v.set('value', val);
                                 relationDefined.push(val);
                             }
@@ -1472,13 +1487,13 @@
                         });
 
                         expressionTexts.each(function(v, k) {
-                            var val =v.getAttribute('text');
+                            var val = v.getAttribute('text');
                             v.set('value', val);
                             console.log(v.getAttribute('text'));
                         });
-                        
-                       
-                        
+
+
+
 
                         //bind ontology selection
                         bindOntologySelection();
@@ -1554,7 +1569,7 @@
                         var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
                             '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
                         var li = document.createElement('li');
-                        li.innerHTML = [img, '<span>', '<a href="filesystem:http://jaydenlin.tw/persistent/'+entry.name+'">'+entry.name+'</a>', '</span>', '<button class="import-file pure-button pure-button-secondary" filename="' + entry.name + '">Import this file</button><button class="remove-file pure-button pure-button-error" filename="' + entry.name + '">Remove this file</button>'].join('');
+                        li.innerHTML = [img, '<span>', '<a href="filesystem:http://jaydenlin.tw/persistent/' + entry.name + '">' + entry.name + '</a>', '</span>', '<button class="import-file pure-button pure-button-secondary" filename="' + entry.name + '">Import this file</button><button class="remove-file pure-button pure-button-error" filename="' + entry.name + '">Remove this file</button>'].join('');
                         li.className = 'file-row';
                         fragment.appendChild(li);
                     }
